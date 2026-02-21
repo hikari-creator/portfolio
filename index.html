@@ -24,7 +24,7 @@
     font-family: 'DM Mono', monospace;
     background: var(--bg);
     color: var(--ink);
-    height: 100vh;
+    height: 100dvh;
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -120,6 +120,7 @@
   .card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.1); }
   .card-thumb { width: 100%; aspect-ratio: 9/16; display: block; position: relative; overflow: hidden; }
   .card-thumb-inner { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 40px; position: relative; }
+  .card-thumb-inner img { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; }
   .card-info { padding: 14px 16px; border-top: 1px solid var(--border); }
   .card-title { font-family: 'Shippori Mincho', serif; font-size: 14px; font-weight: 600; margin-bottom: 6px; line-height: 1.4; }
   .card-badge { font-size: 10px; letter-spacing: 0.1em; padding: 3px 8px; border-radius: 2px; display: inline-block; }
@@ -127,6 +128,27 @@
   .badge-self { background: #f5e0dc; color: var(--accent); border: 1px solid #e5c0b8; }
   .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 300px; gap: 12px; color: var(--muted); }
   .empty-state .emoji { font-size: 36px; }
+
+  /* ─── スマホ用カテゴリドロワー ─── */
+  .mobile-cat-bar {
+    display: none;
+    padding: 0 16px 12px;
+    overflow-x: auto;
+    gap: 8px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .mobile-cat-bar::-webkit-scrollbar { display: none; }
+  .mobile-cat-chip {
+    flex-shrink: 0;
+    background: none; border: 1px solid var(--border);
+    font-family: 'Shippori Mincho', serif; font-size: 13px; color: var(--muted);
+    padding: 6px 14px; border-radius: 20px; cursor: pointer;
+    transition: all 0.2s; white-space: nowrap;
+  }
+  .mobile-cat-chip.active {
+    background: var(--accent); color: #fff; border-color: var(--accent);
+  }
 
   /* ─── Profile ─── */
   #page-profile { animation: fadeUp 0.4s ease; }
@@ -143,6 +165,7 @@
     display: flex; align-items: center; justify-content: center; font-size: 64px;
     border: 3px solid var(--border); overflow: hidden; position: relative;
   }
+  .avatar img { width: 100%; height: 100%; object-fit: cover; }
   .sns-links { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
   .sns-link {
     font-size: 11px; letter-spacing: 0.08em; color: var(--muted); text-decoration: none;
@@ -235,12 +258,13 @@
   }
   .overlay.active .popup { transform: scale(1) translateY(0); }
   .popup-header { padding: 18px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
-  .popup-header-left { display: flex; align-items: center; gap: 12px; }
+  .popup-header-left { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
   .popup-title { font-family: 'Shippori Mincho', serif; font-size: 18px; font-weight: 700; }
   .popup-close {
     background: none; border: 1px solid var(--border); border-radius: 3px;
     width: 34px; height: 34px; font-size: 18px; cursor: pointer; color: var(--ink);
     display: flex; align-items: center; justify-content: center; transition: background 0.15s;
+    flex-shrink: 0;
   }
   .popup-close:hover { background: var(--border); }
   .popup-body { flex: 1; overflow-y: auto; }
@@ -260,13 +284,100 @@
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  /* ═══════════════════════════════════
+     レスポンシブ対応 (768px以下)
+  ═══════════════════════════════════ */
+  @media (max-width: 768px) {
+
+    /* ─ Body ─ */
+    body { height: 100dvh; }
+
+    /* ─ Header ─ */
+    header {
+      padding: 0 16px;
+      height: 54px;
+    }
+    header h1 { font-size: 16px; }
+    header .sub { display: none; }
+    .nav-btn { padding: 7px 10px; font-size: 10px; letter-spacing: 0.08em; }
+
+    /* ─ Layout ─ */
+    .layout { flex-direction: column; }
+
+    /* サイドバーはスマホでは非表示（カテゴリチップで代替） */
+    aside { display: none !important; }
+
+    /* Works ページ */
+    #page-works { padding: 16px 16px; }
+    .mobile-cat-bar { display: flex; }
+    .grid-header { margin-bottom: 16px; }
+    .grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+
+    /* ─ Profile ─ */
+    .profile-inner { padding: 24px 20px; }
+    .profile-top {
+      grid-template-columns: 1fr;
+      gap: 24px;
+      margin-bottom: 32px;
+      padding-bottom: 32px;
+      text-align: center;
+    }
+    .avatar-wrap { flex-direction: column; }
+    .avatar { width: 120px; height: 120px; font-size: 48px; }
+    .profile-name { font-size: 26px; }
+    .profile-name-en { font-size: 11px; margin-bottom: 16px; }
+    .profile-tagline { font-size: 14px; text-align: left; }
+    .profile-bio { text-align: left; }
+
+    .stats-row { flex-wrap: wrap; gap: 4px; }
+    .stat-box { flex: 1 1 calc(50% - 4px); min-width: 0; padding: 16px 8px; }
+    .stat-num { font-size: 26px; }
+
+    .career-item { grid-template-columns: 90px 1fr; gap: 12px; }
+    .career-year { font-size: 11px; }
+
+    .section-label { margin-bottom: 16px; }
+    .stats-row { margin-bottom: 32px; }
+    .career-list { margin-bottom: 32px; }
+    .skill-grid { margin-bottom: 32px; }
+
+    /* ─ Contact ─ */
+    .contact-inner { padding: 24px 20px; }
+    .contact-title { font-size: 26px; }
+    .contact-sub { margin-bottom: 28px; }
+    .contact-body { grid-template-columns: 1fr; gap: 32px; }
+    .form-submit { align-self: stretch; }
+
+    /* ─ Popup ─ */
+    .popup {
+      width: 100vw;
+      height: 100dvh;
+      border-radius: 0;
+    }
+    .popup-header { padding: 14px 16px; }
+    .popup-title { font-size: 15px; }
+    .lp-section { padding: 40px 20px; }
+    .lp-hero { min-height: 300px; gap: 14px; }
+    .lp-hero-title { font-size: 26px; }
+    .lp-hero-sub { font-size: 13px; }
+    .lp-cta { padding: 12px 28px; }
+    .lp-feature-grid { grid-template-columns: 1fr; gap: 16px; }
+    .lp-divider { margin: 0 20px; }
+  }
+
+  /* ─ 極小画面 (375px以下) ─ */
+  @media (max-width: 375px) {
+    .grid { grid-template-columns: 1fr; }
+    .stat-box { flex: 1 1 calc(50% - 4px); }
+  }
 </style>
 </head>
 <body>
 
 <header>
   <div class="header-left">
-    <h1>LP Works</h1>
+    <h1>PORTFOLIO</h1>
     <div class="sub">Landing Page Portfolio</div>
   </div>
   <nav>
@@ -282,7 +393,10 @@
 
     <!-- Works -->
     <div class="page active" id="page-works">
-      <div style="padding:28px 32px;">
+      <!-- スマホ用カテゴリチップ -->
+      <div class="mobile-cat-bar" id="mobile-cat-bar"></div>
+      <div style="padding:0 16px 16px; padding-top:0;" id="works-content-sp" style="display:none;"></div>
+      <div style="padding:28px 32px; padding-top:0;" id="works-inner">
         <div class="grid-header">
           <div class="grid-title" id="grid-title"></div>
           <div class="grid-count" id="grid-count"></div>
@@ -296,62 +410,56 @@
       <div class="profile-inner">
         <div class="profile-top">
           <div class="avatar-wrap">
-            <div class="avatar">👤</div>
+            <div class="avatar">
+              <img src="img/profile.jpg" alt="プロフィール写真" onerror="this.style.display='none';this.parentElement.innerHTML='👤';">
+            </div>
             <div class="sns-links">
-              <a class="sns-link" href="#">𝕏</a>
-              <a class="sns-link" href="#">Instagram</a>
-              <a class="sns-link" href="#">note</a>
+              <a class="sns-link" href="https://www.instagram.com/meowe_fumi2">Instagram</a>
             </div>
           </div>
           <div>
-            <div class="profile-name">山田 花子</div>
-            <div class="profile-name-en">Hanako Yamada — LP Designer</div>
-            <div class="profile-tagline">「売れるLP」をつくるデザイナー。<br>ビジュアルとコピーの両面から、成果にこだわります。</div>
-            <div class="profile-bio">広告代理店でWebデザイナーとして5年勤務後、独立。食品・コスメ・日用品を中心にECサイトやLPの制作を専門とする。デザインだけでなく、コピーライティングや構成設計まで一気通貫で担当できることが強み。クライアントワーク実績100本以上。</div>
+            <div class="profile-name">まつい ひかり</div>
+            <div class="profile-name-en">Hikari Matsui — WEB Designer</div>
+            <div class="profile-tagline">デザインの力で商品の魅力を200%伝えます</div>
+            <div class="profile-bio">スイーツの製造・販売会社でWEBデザイナーとしてLP制作、ECサイト運営を約3年間経験したのち、フリーランスへ転向。WEBデザイナーとして活動するかたわら、保護猫活動のための猫雑貨ブランド「meowe.」を立ち上げる。</div>
           </div>
         </div>
 
-        <div class="section-label">実績</div>
+        <!--<div class="section-label">実績</div>
         <div class="stats-row">
           <div class="stat-box"><div class="stat-num">100+</div><div class="stat-label">制作LP本数</div></div>
           <div class="stat-box"><div class="stat-num">5+</div><div class="stat-label">独立年数</div></div>
           <div class="stat-box"><div class="stat-num">40+</div><div class="stat-label">クライアント数</div></div>
           <div class="stat-box"><div class="stat-num">18</div><div class="stat-label">掲載作品数</div></div>
-        </div>
+        </div>-->
 
         <div class="section-label">経歴</div>
         <div class="career-list">
           <div class="career-item">
-            <div class="career-year">2024 –</div>
-            <div><div class="career-role">フリーランスデザイナー</div><div class="career-company">個人事業・LP制作・コンサルティング</div></div>
+            <div class="career-year">2024 8月–</div>
+            <div><div class="career-role">フリーランスデザイナー</div><div class="career-company">LP制作・HP制作・写真撮影</div></div>
           </div>
           <div class="career-item">
             <div class="career-year">2021 – 2024</div>
-            <div><div class="career-role">シニアWebデザイナー</div><div class="career-company">株式会社〇〇エージェンシー</div></div>
+            <div><div class="career-role">WEBデザイナー</div><div class="career-company">スイーツ製造・販売会社の制作部署にてWEBデザイナーとして勤務<br>主にECサイト(楽天市場・Amazon)のLP制作を行う</div></div>
           </div>
           <div class="career-item">
-            <div class="career-year">2019 – 2021</div>
-            <div><div class="career-role">Webデザイナー</div><div class="career-company">株式会社△△クリエイティブ</div></div>
-          </div>
-          <div class="career-item">
-            <div class="career-year">2019</div>
-            <div><div class="career-role">グラフィックデザイン学科 卒業</div><div class="career-company">〇〇デザイン専門学校</div></div>
+            <div class="career-year">2016 – 2020</div>
+            <div><div class="career-role">求人広告デザイナー</div><div class="career-company">求人誌の制作やチラシなどの印刷デザインに携わる</div></div>
           </div>
         </div>
 
         <div class="section-label">スキル</div>
         <div class="skill-grid">
-          <span class="skill-tag primary">LP設計・制作</span>
-          <span class="skill-tag primary">UIデザイン</span>
+          <span class="skill-tag primary">LP制作</span>
+          <span class="skill-tag primary">HP制作</span>
+          <span class="skill-tag primary">Photoshop</span>
+          <span class="skill-tag primary">Illustrator</span>
           <span class="skill-tag primary">コピーライティング</span>
-          <span class="skill-tag">Figma</span>
-          <span class="skill-tag">Photoshop</span>
-          <span class="skill-tag">Illustrator</span>
-          <span class="skill-tag">HTML / CSS</span>
-          <span class="skill-tag">WordPress</span>
-          <span class="skill-tag">ABテスト設計</span>
-          <span class="skill-tag">ユーザーリサーチ</span>
-          <span class="skill-tag">競合分析</span>
+          <span class="skill-tag primary">イラスト</span>
+          <span class="skill-tag primary">写真撮影</span>
+          <span class="skill-tag primary">バナー制作(広告・SNS)</span>
+          <span class="skill-tag primary">名刺・チラシデザイン</span>
         </div>
       </div>
     </div>
@@ -366,7 +474,7 @@
           <div class="contact-info">
             <div>
               <div class="contact-info-label">Email</div>
-              <div class="contact-info-value">hello@example.com</div>
+              <div class="contact-info-value">hikari0matsui@gmail.com</div>
             </div>
             <div>
               <div class="contact-info-label">対応エリア</div>
@@ -377,7 +485,7 @@
               <div style="font-size:13px;line-height:2.2;color:var(--muted);">
                 LP制作（新規・リニューアル）<br>
                 構成・コピーライティング<br>
-                ABテスト設計・改善提案<br>
+                写真撮影<br>
                 デザインコンサルティング
               </div>
             </div>
@@ -387,43 +495,58 @@
           </div>
 
           <div>
-            <form class="form" id="contact-form" onsubmit="submitForm(event)">
-              <div class="form-group">
-                <label class="form-label">お名前<span>*</span></label>
-                <input class="form-input" type="text" placeholder="山田 太郎" required>
-              </div>
-              <div class="form-group">
-                <label class="form-label">メールアドレス<span>*</span></label>
-                <input class="form-input" type="email" placeholder="email@example.com" required>
-              </div>
-              <div class="form-group">
-                <label class="form-label">ご依頼の種類</label>
-                <select class="form-select">
-                  <option value="">選択してください</option>
-                  <option>LP制作（新規）</option>
-                  <option>LP改善・リニューアル</option>
-                  <option>構成・コピーライティング</option>
-                  <option>コンサルティング</option>
-                  <option>その他</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label class="form-label">ご予算の目安</label>
-                <select class="form-select">
-                  <option value="">選択してください</option>
-                  <option>〜10万円</option>
-                  <option>10〜30万円</option>
-                  <option>30〜50万円</option>
-                  <option>50万円〜</option>
-                  <option>未定・要相談</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label class="form-label">ご相談内容<span>*</span></label>
-                <textarea class="form-textarea" placeholder="ご依頼の概要、納期のご希望、参考サイトなどできるだけ詳しくお書きください。" required></textarea>
-              </div>
-              <button type="submit" class="form-submit">送信する →</button>
-            </form>
+            <form class="form"
+      name="contact"
+      method="POST"
+      data-netlify="true"
+      netlify-honeypot="bot-field"
+      action="/thanks.html">
+
+  <input type="hidden" name="form-name" value="contact">
+  <p style="display:none;">
+    <label>Don’t fill this out: <input name="bot-field"></label>
+  </p>
+
+  <div class="form-group">
+    <label class="form-label">お名前<span>*</span></label>
+    <input class="form-input" type="text" name="name" placeholder="山田 太郎" required>
+  </div>
+
+  <div class="form-group">
+    <label class="form-label">メールアドレス<span>*</span></label>
+    <input class="form-input" type="email" name="email" placeholder="email@example.com" required>
+  </div>
+
+  <div class="form-group">
+    <label class="form-label">ご依頼の種類</label>
+    <select class="form-select" name="type">
+      <option value="">選択してください</option>
+      <option>LP制作</option>
+      <option>HP制作</option>
+      <option>写真撮影</option>
+      <option>その他</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label class="form-label">ご予算の目安</label>
+    <select class="form-select" name="budget">
+      <option value="">選択してください</option>
+      <option>〜10万円</option>
+      <option>10〜30万円</option>
+      <option>30〜50万円</option>
+      <option>50万円〜</option>
+      <option>未定・要相談</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label class="form-label">ご相談内容<span>*</span></label>
+    <textarea class="form-textarea" name="message" required></textarea>
+  </div>
+
+  <button type="submit" class="form-submit">送信する →</button>
+</form>
             <div class="form-sent" id="form-sent">
               ✓ お問い合わせを受け付けました。<br>
               2〜3営業日以内にご返信いたします。
@@ -455,24 +578,24 @@
 <script>
 // ─── Data ───
 const portfolios = [
-  { id:1, title:'オーガニックスムージー定期便', category:'食品', type:'client', color:'#2d5a2d', bg:'#e8f5e8', emoji:'🥤', accent:'#4a8c4a', heroTitle:'体の中から、美しく。\nオーガニックスムージー定期便', heroCopy:'厳選されたオーガニック野菜と果物だけを使用。毎朝届く新鮮なスムージーで、あなたの一日を始めましょう。', features:[{icon:'🌿',title:'完全無農薬',text:'農薬・化学肥料不使用。産地直送の安心素材だけを使用しています。'},{icon:'❄️',title:'低温圧搾製法',text:'栄養素を壊さない低温圧搾製法で、素材本来の栄養をそのままお届け。'},{icon:'📦',title:'毎朝冷蔵配送',text:'毎朝6時〜9時の時間帯に、冷蔵便でお届けします。'}]},
-  { id:2, title:'クラフトビール飲み比べセット', category:'食品', type:'client', color:'#8b5e3c', bg:'#f5ede3', emoji:'🍺', accent:'#c4864a', heroTitle:'知る人ぞ知る\n職人ビールをあなたの食卓へ', heroCopy:'全国各地の小規模ブルワリーが造る個性豊かなクラフトビール。毎月厳選した6本をお届けします。', features:[{icon:'🗾',title:'全国47都道府県',text:'北海道から沖縄まで、各地のブルワリーと直接契約。'},{icon:'🍺',title:'月替わりセレクション',text:'毎月ソムリエが厳選した6種類のビールをお届け。'},{icon:'📖',title:'テイスティングノート付き',text:'各ビールの特徴・合う料理をまとめたノート同封。'}]},
-  { id:3, title:'プロテインフード新感覚ブランド', category:'食品', type:'self', color:'#1a1a2e', bg:'#e8e8f5', emoji:'💪', accent:'#4a4aaa', heroTitle:'Food is Power.\n食事革命、始まる。', heroCopy:'タンパク質30g配合なのに、まるでスイーツ。新感覚のプロテインフードで、筋活をもっと楽しく。', features:[{icon:'💪',title:'プロテイン30g',text:'1食でプロテイン30gを無理なく摂取できる設計です。'},{icon:'🍫',title:'糖質オフ',text:'糖質を抑えながらも、満足感のある味わいを実現。'},{icon:'⚡',title:'18種のアミノ酸',text:'必須アミノ酸を全種類バランスよく配合しています。'}]},
-  { id:4, title:'和菓子サブスクリプション', category:'食品', type:'client', color:'#5c3d2e', bg:'#f5f0ea', emoji:'🍡', accent:'#8c5a3c', heroTitle:'季節を食べる、\n日本の美意識。', heroCopy:'老舗和菓子店との協業で生まれた、四季折々の上生菓子セット。毎月、職人の手仕事をお届けします。', features:[{icon:'🍃',title:'季節の素材',text:'その季節にしか手に入らない、国産素材を贅沢に使用。'},{icon:'👘',title:'職人の手仕事',text:'創業100年以上の老舗和菓子職人が一つ一つ丁寧に製作。'},{icon:'🎁',title:'ギフト対応',text:'贈り物にも対応。のし・メッセージカード無料。'}]},
-  { id:5, title:'スキンケアライン ミニマリスト', category:'コスメ', type:'client', color:'#3d2e5c', bg:'#f0eaf5', emoji:'✨', accent:'#7a5c9c', heroTitle:'引き算の美容。\n本当に必要なものだけ。', heroCopy:'3ステップで完結する、シンプルで効果的なスキンケアルーティン。不要な成分を徹底的に排除しました。', features:[{icon:'🌿',title:'29成分以下',text:'シンプルな処方で、敏感肌にも安心して使えます。'},{icon:'♻️',title:'サスティナブル容器',text:'100%リサイクル可能な容器を使用しています。'},{icon:'🐰',title:'クルエルティフリー',text:'動物実験を一切行っていないクルエルティフリー認定取得。'}]},
-  { id:6, title:'メンズスキンケア入門セット', category:'コスメ', type:'client', color:'#1a2e3d', bg:'#e3edf5', emoji:'🧴', accent:'#3d6c8c', heroTitle:'男の肌、本気で変える。', heroCopy:'スキンケア初心者の男性のために設計した、迷わず始められる入門セット。洗顔・化粧水・クリームの3点。', features:[{icon:'⚡',title:'時短3ステップ',text:'忙しい朝でも3分で完了するシンプルルーティン。'},{icon:'🔬',title:'メンズ肌特化処方',text:'皮脂量の多い男性肌のために専用に開発した処方。'},{icon:'📱',title:'アプリ連動',text:'専用アプリで肌状態をトラッキング。最適ケアを提案。'}]},
-  { id:7, title:'発酵コスメブランド', category:'コスメ', type:'self', color:'#3d2e1a', bg:'#f5f0e3', emoji:'🫧', accent:'#8c6a2e', heroTitle:'菌が育てる、\n未来の美肌。', heroCopy:'伝統的な発酵技術と最新バイオテクノロジーの融合。腸活×美肌の新発想スキンケアブランド。', features:[{icon:'🦠',title:'5000億個の善玉菌',text:'厳選した5種のプロバイオティクスを高濃度配合。'},{icon:'🌾',title:'国産原料100%',text:'国内の自社農場で育てた素材のみを使用しています。'},{icon:'📊',title:'3週間実感データ',text:'93%のユーザーが3週間で肌変化を実感（社内調査）。'}]},
-  { id:8, title:'UVケアコスメ夏限定LP', category:'コスメ', type:'client', color:'#5c2e1a', bg:'#f5ebe3', emoji:'☀️', accent:'#e0724a', heroTitle:'灼熱の夏も、\n素肌に自信を。', heroCopy:'SPF50+・PA++++の最強UVカットと、ツヤ感も諦めない。夏専用の高機能日焼け止めコスメ。', features:[{icon:'🛡️',title:'SPF50+ PA++++',text:'最高レベルのUVカット効果で、肌をしっかり守ります。'},{icon:'💧',title:'耐汗・耐水',text:'汗や水に強いウォータープルーフ処方を採用。'},{icon:'✨',title:'ツヤ・うるおい両立',text:'日焼け止めなのに、つけるとツヤとうるおい感が続く。'}]},
-  { id:9, title:'エコ洗剤定期便', category:'日用品', type:'client', color:'#1a3d2e', bg:'#e3f5ee', emoji:'🌱', accent:'#2e8c5c', heroTitle:'地球にやさしい選択が、\n毎日のルーティンになる。', heroCopy:'植物由来成分100%の洗剤。詰め替えサブスクで、プラスチック廃棄量を75%削減できます。', features:[{icon:'🌍',title:'CO2排出量75%削減',text:'詰め替え方式により、従来品比でCO2排出量を大幅削減。'},{icon:'🌿',title:'植物由来100%',text:'界面活性剤も植物由来。肌にも環境にも優しい処方。'},{icon:'📦',title:'リターナブル容器',text:'空になった容器は回収・洗浄して再利用するシステム。'}]},
-  { id:10, title:'スマートホーム掃除機', category:'日用品', type:'client', color:'#1a1a1a', bg:'#f0f0f0', emoji:'🤖', accent:'#505050', heroTitle:'掃除、もう\n自分でやらなくていい。', heroCopy:'AIが間取りを学習し、最適ルートで自動掃除。外出中も家の中をきれいに保ちます。', features:[{icon:'🤖',title:'AI間取り学習',text:'使うほど賢くなる。家具配置も自動で最適化します。'},{icon:'📱',title:'スマホ連携',text:'外出先からでも操作可能。終了通知もお知らせ。'},{icon:'🔋',title:'180分稼働',text:'大容量バッテリーで広い家もノンストップで掃除。'}]},
-  { id:11, title:'アロマディフューザー', category:'日用品', type:'self', color:'#2e1a3d', bg:'#eee3f5', emoji:'🕯️', accent:'#6e4a8c', heroTitle:'帰る場所を、\n香りでととのえる。', heroCopy:'インテリアとして飾りたくなるデザインと、暮らしを包む香りが融合。家時間を豊かにする一台。', features:[{icon:'🎨',title:'受賞デザイン',text:'グッドデザイン賞受賞。どんなインテリアにも馴染む。'},{icon:'⏱️',title:'タイマー機能',text:'就寝前・起床時など、シーンに合わせた自動運転設定。'},{icon:'🌬️',title:'超音波式ミスト',text:'熱を使わないため、精油の香り成分を損なわない。'}]},
-  { id:12, title:'布団クリーニング宅配サービス', category:'日用品', type:'client', color:'#2e3d5c', bg:'#e3e8f5', emoji:'🛏️', accent:'#4a5c8c', heroTitle:'布団を洗う、\n新しい常識。', heroCopy:'集荷から納品まで最短5日。プロの洗浄技術で、ダニ・花粉・皮脂汚れを徹底除去します。', features:[{icon:'🚚',title:'集荷・配送無料',text:'申し込みから受け取りまで、運ぶ手間は一切なし。'},{icon:'🔬',title:'ダニ除去率99.9%',text:'高温乾燥仕上げでダニを除去。アレルギー対策にも。'},{icon:'💤',title:'ふっくら仕上げ',text:'業務用乾燥機で仕上げ。ふっくらやわらかさが戻ります。'}]},
-  { id:13, title:'サステナブルウェアブランド', category:'ファッション', type:'self', color:'#2e3d1a', bg:'#eef5e3', emoji:'👗', accent:'#5c8c2e', heroTitle:'着るたびに、\n地球が喜ぶ。', heroCopy:'廃棄素材・天然染料・フェアトレード。ファッションの新しい基準を、日常のクローゼットへ。', features:[{icon:'♻️',title:'廃棄素材活用',text:'廃棄予定の生地・端材を活用したアップサイクルデザイン。'},{icon:'🌈',title:'天然染料100%',text:'化学染料を使わず、草木染めや藍染めで自然な色を表現。'},{icon:'🤝',title:'フェアトレード',text:'製造に関わる全ての作業者に適正な賃金を保証します。'}]},
-  { id:14, title:'オーダーメイドスーツLP', category:'ファッション', type:'client', color:'#1a1a2e', bg:'#e8e8f5', emoji:'👔', accent:'#2e2e8c', heroTitle:'あなたの体型のために\n仕立てた一着が、自信になる。', heroCopy:'60以上のサイズ項目で採寸。職人が一着一着手縫いで仕立てる、本物のオーダースーツ。', features:[{icon:'📐',title:'60項目採寸',text:'体型の微妙なクセまで捉える、徹底的なフィッティング。'},{icon:'✂️',title:'職人の手縫い',text:'熟練の仕立職人が、一針一針丁寧に仕上げます。'},{icon:'🔄',title:'永久リフォーム保証',text:'体型変化に合わせたリフォームを永久に無料で承ります。'}]},
-  { id:15, title:'パーソナルジム入会LP', category:'健康・美容', type:'client', color:'#1a2e3d', bg:'#e3edf5', emoji:'🏋️', accent:'#1a5c8c', heroTitle:'3ヶ月で、\n人生が変わる体になる。', heroCopy:'専属トレーナーが専用プログラムを設計。科学的なアプローチで、確実に結果が出るパーソナルジム。', features:[{icon:'🎯',title:'完全個別プログラム',text:'目標・体型・ライフスタイルに合わせた専用メニュー設計。'},{icon:'🥗',title:'食事サポート込み',text:'トレーニングだけでなく、食事指導もセットで提供。'},{icon:'📊',title:'毎週体組成測定',text:'数値で変化を実感。モチベーション継続をサポート。'}]},
-  { id:16, title:'ヨガスタジオオンライン化LP', category:'健康・美容', type:'client', color:'#3d1a2e', bg:'#f5e3ee', emoji:'🧘', accent:'#8c2e5c', heroTitle:'どこにいても、\nあなただけの静寂の時間を。', heroCopy:'全国のヨガ講師とのライブレッスン。好きな時間に、好きな場所で、心と体を整えましょう。', features:[{icon:'📅',title:'週100本以上',text:'毎日朝から夜まで、様々なクラスから選べます。'},{icon:'👩‍🏫',title:'認定講師のみ',text:'厳選された資格保持者のみが指導。質の高いレッスン。'},{icon:'📱',title:'見放題アーカイブ',text:'過去のレッスンが見放題。自分のペースで取り組める。'}]},
-  { id:17, title:'プロジェクト管理SaaSツール', category:'IT・SaaS', type:'client', color:'#1a1a3d', bg:'#e3e3f5', emoji:'⚙️', accent:'#2e2e9c', heroTitle:'チームの仕事が、\n2倍速くなる。', heroCopy:'タスク管理・コミュニケーション・進捗レポートを一元化。散らばる情報をひとつのプラットフォームに。', features:[{icon:'📊',title:'リアルタイム進捗',text:'全タスクの進捗状況をダッシュボードで一目で把握。'},{icon:'💬',title:'タスク連携コメント',text:'各タスクに紐づいたコメント機能で、情報が散らばらない。'},{icon:'🔗',title:'500+ツール連携',text:'Slack・GitHub・Figmaなど主要ツールとシームレスに連携。'}]},
-  { id:18, title:'AI文章生成ツールLP', category:'IT・SaaS', type:'self', color:'#1a3d3d', bg:'#e3f5f5', emoji:'🤖', accent:'#1a8c8c', heroTitle:'あなたの言いたいことを、\n最高の言葉で届ける。', heroCopy:'AIが文脈を理解して、ブログ・SNS・メール・企画書、あらゆる文章を瞬時に生成します。', features:[{icon:'✍️',title:'30秒で1記事',text:'プロンプト入力から完成まで、わずか30秒。効率が激変。'},{icon:'🌐',title:'日本語特化',text:'日本語の自然な表現・敬語・ニュアンスに特化したAI。'},{icon:'🎨',title:'トーン調整',text:'フォーマル・カジュアル・専門的など文体を自由に変更。'}]},
+  { id:1, img:'img/work_01.webp', title:'オーガニックスムージー定期便', category:'食品', type:'client', color:'#2d5a2d', bg:'#e8f5e8', emoji:'🥤', accent:'#4a8c4a', heroTitle:'体の中から、美しく。\nオーガニックスムージー定期便', heroCopy:'厳選されたオーガニック野菜と果物だけを使用。毎朝届く新鮮なスムージーで、あなたの一日を始めましょう。', features:[{icon:'🌿',title:'完全無農薬',text:'農薬・化学肥料不使用。産地直送の安心素材だけを使用しています。'},{icon:'❄️',title:'低温圧搾製法',text:'栄養素を壊さない低温圧搾製法で、素材本来の栄養をそのままお届け。'},{icon:'📦',title:'毎朝冷蔵配送',text:'毎朝6時〜9時の時間帯に、冷蔵便でお届けします。'}]},
+  { id:2, img:'img/work_02.webp', title:'クラフトビール飲み比べセット', category:'食品', type:'client', color:'#8b5e3c', bg:'#f5ede3', emoji:'🍺', accent:'#c4864a', heroTitle:'知る人ぞ知る\n職人ビールをあなたの食卓へ', heroCopy:'全国各地の小規模ブルワリーが造る個性豊かなクラフトビール。毎月厳選した6本をお届けします。', features:[{icon:'🗾',title:'全国47都道府県',text:'北海道から沖縄まで、各地のブルワリーと直接契約。'},{icon:'🍺',title:'月替わりセレクション',text:'毎月ソムリエが厳選した6種類のビールをお届け。'},{icon:'📖',title:'テイスティングノート付き',text:'各ビールの特徴・合う料理をまとめたノート同封。'}]},
+  { id:3, img:'img/work_03.webp', title:'プロテインフード新感覚ブランド', category:'食品', type:'self', color:'#1a1a2e', bg:'#e8e8f5', emoji:'💪', accent:'#4a4aaa', heroTitle:'Food is Power.\n食事革命、始まる。', heroCopy:'タンパク質30g配合なのに、まるでスイーツ。新感覚のプロテインフードで、筋活をもっと楽しく。', features:[{icon:'💪',title:'プロテイン30g',text:'1食でプロテイン30gを無理なく摂取できる設計です。'},{icon:'🍫',title:'糖質オフ',text:'糖質を抑えながらも、満足感のある味わいを実現。'},{icon:'⚡',title:'18種のアミノ酸',text:'必須アミノ酸を全種類バランスよく配合しています。'}]},
+  { id:4, img:'img/work_04.webp', title:'和菓子サブスクリプション', category:'食品', type:'client', color:'#5c3d2e', bg:'#f5f0ea', emoji:'🍡', accent:'#8c5a3c', heroTitle:'季節を食べる、\n日本の美意識。', heroCopy:'老舗和菓子店との協業で生まれた、四季折々の上生菓子セット。毎月、職人の手仕事をお届けします。', features:[{icon:'🍃',title:'季節の素材',text:'その季節にしか手に入らない、国産素材を贅沢に使用。'},{icon:'👘',title:'職人の手仕事',text:'創業100年以上の老舗和菓子職人が一つ一つ丁寧に製作。'},{icon:'🎁',title:'ギフト対応',text:'贈り物にも対応。のし・メッセージカード無料。'}]},
+  { id:5, img:'img/work_05.webp', title:'スキンケアライン ミニマリスト', category:'コスメ', type:'client', color:'#3d2e5c', bg:'#f0eaf5', emoji:'✨', accent:'#7a5c9c', heroTitle:'引き算の美容。\n本当に必要なものだけ。', heroCopy:'3ステップで完結する、シンプルで効果的なスキンケアルーティン。不要な成分を徹底的に排除しました。', features:[{icon:'🌿',title:'29成分以下',text:'シンプルな処方で、敏感肌にも安心して使えます。'},{icon:'♻️',title:'サスティナブル容器',text:'100%リサイクル可能な容器を使用しています。'},{icon:'🐰',title:'クルエルティフリー',text:'動物実験を一切行っていないクルエルティフリー認定取得。'}]},
+  { id:6, img:'img/work_06.webp', title:'メンズスキンケア入門セット', category:'コスメ', type:'client', color:'#1a2e3d', bg:'#e3edf5', emoji:'🧴', accent:'#3d6c8c', heroTitle:'男の肌、本気で変える。', heroCopy:'スキンケア初心者の男性のために設計した、迷わず始められる入門セット。洗顔・化粧水・クリームの3点。', features:[{icon:'⚡',title:'時短3ステップ',text:'忙しい朝でも3分で完了するシンプルルーティン。'},{icon:'🔬',title:'メンズ肌特化処方',text:'皮脂量の多い男性肌のために専用に開発した処方。'},{icon:'📱',title:'アプリ連動',text:'専用アプリで肌状態をトラッキング。最適ケアを提案。'}]},
+  { id:7, img:'img/work_07.webp', title:'発酵コスメブランド', category:'コスメ', type:'self', color:'#3d2e1a', bg:'#f5f0e3', emoji:'🫧', accent:'#8c6a2e', heroTitle:'菌が育てる、\n未来の美肌。', heroCopy:'伝統的な発酵技術と最新バイオテクノロジーの融合。腸活×美肌の新発想スキンケアブランド。', features:[{icon:'🦠',title:'5000億個の善玉菌',text:'厳選した5種のプロバイオティクスを高濃度配合。'},{icon:'🌾',title:'国産原料100%',text:'国内の自社農場で育てた素材のみを使用しています。'},{icon:'📊',title:'3週間実感データ',text:'93%のユーザーが3週間で肌変化を実感（社内調査）。'}]},
+  { id:8, img:'img/work_08.webp', title:'UVケアコスメ夏限定LP', category:'コスメ', type:'client', color:'#5c2e1a', bg:'#f5ebe3', emoji:'☀️', accent:'#e0724a', heroTitle:'灼熱の夏も、\n素肌に自信を。', heroCopy:'SPF50+・PA++++の最強UVカットと、ツヤ感も諦めない。夏専用の高機能日焼け止めコスメ。', features:[{icon:'🛡️',title:'SPF50+ PA++++',text:'最高レベルのUVカット効果で、肌をしっかり守ります。'},{icon:'💧',title:'耐汗・耐水',text:'汗や水に強いウォータープルーフ処方を採用。'},{icon:'✨',title:'ツヤ・うるおい両立',text:'日焼け止めなのに、つけるとツヤとうるおい感が続く。'}]},
+  { id:9, img:'img/work_09.webp', title:'エコ洗剤定期便', category:'日用品', type:'client', color:'#1a3d2e', bg:'#e3f5ee', emoji:'🌱', accent:'#2e8c5c', heroTitle:'地球にやさしい選択が、\n毎日のルーティンになる。', heroCopy:'植物由来成分100%の洗剤。詰め替えサブスクで、プラスチック廃棄量を75%削減できます。', features:[{icon:'🌍',title:'CO2排出量75%削減',text:'詰め替え方式により、従来品比でCO2排出量を大幅削減。'},{icon:'🌿',title:'植物由来100%',text:'界面活性剤も植物由来。肌にも環境にも優しい処方。'},{icon:'📦',title:'リターナブル容器',text:'空になった容器は回収・洗浄して再利用するシステム。'}]},
+  { id:10, img:'img/work_10.webp', title:'スマートホーム掃除機', category:'日用品', type:'client', color:'#1a1a1a', bg:'#f0f0f0', emoji:'🤖', accent:'#505050', heroTitle:'掃除、もう\n自分でやらなくていい。', heroCopy:'AIが間取りを学習し、最適ルートで自動掃除。外出中も家の中をきれいに保ちます。', features:[{icon:'🤖',title:'AI間取り学習',text:'使うほど賢くなる。家具配置も自動で最適化します。'},{icon:'📱',title:'スマホ連携',text:'外出先からでも操作可能。終了通知もお知らせ。'},{icon:'🔋',title:'180分稼働',text:'大容量バッテリーで広い家もノンストップで掃除。'}]},
+  { id:11, img:'img/work_11.webp', title:'アロマディフューザー', category:'日用品', type:'self', color:'#2e1a3d', bg:'#eee3f5', emoji:'🕯️', accent:'#6e4a8c', heroTitle:'帰る場所を、\n香りでととのえる。', heroCopy:'インテリアとして飾りたくなるデザインと、暮らしを包む香りが融合。家時間を豊かにする一台。', features:[{icon:'🎨',title:'受賞デザイン',text:'グッドデザイン賞受賞。どんなインテリアにも馴染む。'},{icon:'⏱️',title:'タイマー機能',text:'就寝前・起床時など、シーンに合わせた自動運転設定。'},{icon:'🌬️',title:'超音波式ミスト',text:'熱を使わないため、精油の香り成分を損なわない。'}]},
+  { id:12, img:'img/work_12.webp', title:'布団クリーニング宅配サービス', category:'日用品', type:'client', color:'#2e3d5c', bg:'#e3e8f5', emoji:'🛏️', accent:'#4a5c8c', heroTitle:'布団を洗う、\n新しい常識。', heroCopy:'集荷から納品まで最短5日。プロの洗浄技術で、ダニ・花粉・皮脂汚れを徹底除去します。', features:[{icon:'🚚',title:'集荷・配送無料',text:'申し込みから受け取りまで、運ぶ手間は一切なし。'},{icon:'🔬',title:'ダニ除去率99.9%',text:'高温乾燥仕上げでダニを除去。アレルギー対策にも。'},{icon:'💤',title:'ふっくら仕上げ',text:'業務用乾燥機で仕上げ。ふっくらやわらかさが戻ります。'}]},
+  { id:13, img:'img/work_13.webp', title:'サステナブルウェアブランド', category:'ファッション', type:'self', color:'#2e3d1a', bg:'#eef5e3', emoji:'👗', accent:'#5c8c2e', heroTitle:'着るたびに、\n地球が喜ぶ。', heroCopy:'廃棄素材・天然染料・フェアトレード。ファッションの新しい基準を、日常のクローゼットへ。', features:[{icon:'♻️',title:'廃棄素材活用',text:'廃棄予定の生地・端材を活用したアップサイクルデザイン。'},{icon:'🌈',title:'天然染料100%',text:'化学染料を使わず、草木染めや藍染めで自然な色を表現。'},{icon:'🤝',title:'フェアトレード',text:'製造に関わる全ての作業者に適正な賃金を保証します。'}]},
+  { id:14, img:'img/work_14.webp', title:'オーダーメイドスーツLP', category:'ファッション', type:'client', color:'#1a1a2e', bg:'#e8e8f5', emoji:'👔', accent:'#2e2e8c', heroTitle:'あなたの体型のために\n仕立てた一着が、自信になる。', heroCopy:'60以上のサイズ項目で採寸。職人が一着一着手縫いで仕立てる、本物のオーダースーツ。', features:[{icon:'📐',title:'60項目採寸',text:'体型の微妙なクセまで捉える、徹底的なフィッティング。'},{icon:'✂️',title:'職人の手縫い',text:'熟練の仕立職人が、一針一針丁寧に仕上げます。'},{icon:'🔄',title:'永久リフォーム保証',text:'体型変化に合わせたリフォームを永久に無料で承ります。'}]},
+  { id:15, img:'img/work_15.webp', title:'パーソナルジム入会LP', category:'健康・美容', type:'client', color:'#1a2e3d', bg:'#e3edf5', emoji:'🏋️', accent:'#1a5c8c', heroTitle:'3ヶ月で、\n人生が変わる体になる。', heroCopy:'専属トレーナーが専用プログラムを設計。科学的なアプローチで、確実に結果が出るパーソナルジム。', features:[{icon:'🎯',title:'完全個別プログラム',text:'目標・体型・ライフスタイルに合わせた専用メニュー設計。'},{icon:'🥗',title:'食事サポート込み',text:'トレーニングだけでなく、食事指導もセットで提供。'},{icon:'📊',title:'毎週体組成測定',text:'数値で変化を実感。モチベーション継続をサポート。'}]},
+  { id:16, img:'img/work_16.webp', title:'ヨガスタジオオンライン化LP', category:'健康・美容', type:'client', color:'#3d1a2e', bg:'#f5e3ee', emoji:'🧘', accent:'#8c2e5c', heroTitle:'どこにいても、\nあなただけの静寂の時間を。', heroCopy:'全国のヨガ講師とのライブレッスン。好きな時間に、好きな場所で、心と体を整えましょう。', features:[{icon:'📅',title:'週100本以上',text:'毎日朝から夜まで、様々なクラスから選べます。'},{icon:'👩‍🏫',title:'認定講師のみ',text:'厳選された資格保持者のみが指導。質の高いレッスン。'},{icon:'📱',title:'見放題アーカイブ',text:'過去のレッスンが見放題。自分のペースで取り組める。'}]},
+  { id:17, img:'img/work_17.webp', title:'プロジェクト管理SaaSツール', category:'IT・SaaS', type:'client', color:'#1a1a3d', bg:'#e3e3f5', emoji:'⚙️', accent:'#2e2e9c', heroTitle:'チームの仕事が、\n2倍速くなる。', heroCopy:'タスク管理・コミュニケーション・進捗レポートを一元化。散らばる情報をひとつのプラットフォームに。', features:[{icon:'📊',title:'リアルタイム進捗',text:'全タスクの進捗状況をダッシュボードで一目で把握。'},{icon:'💬',title:'タスク連携コメント',text:'各タスクに紐づいたコメント機能で、情報が散らばらない。'},{icon:'🔗',title:'500+ツール連携',text:'Slack・GitHub・Figmaなど主要ツールとシームレスに連携。'}]},
+  { id:18, img:'img/work_18.webp', title:'AI文章生成ツールLP', category:'IT・SaaS', type:'self', color:'#1a3d3d', bg:'#e3f5f5', emoji:'🤖', accent:'#1a8c8c', heroTitle:'あなたの言いたいことを、\n最高の言葉で届ける。', heroCopy:'AIが文脈を理解して、ブログ・SNS・メール・企画書、あらゆる文章を瞬時に生成します。', features:[{icon:'✍️',title:'30秒で1記事',text:'プロンプト入力から完成まで、わずか30秒。効率が激変。'},{icon:'🌐',title:'日本語特化',text:'日本語の自然な表現・敬語・ニュアンスに特化したAI。'},{icon:'🎨',title:'トーン調整',text:'フォーマル・カジュアル・専門的など文体を自由に変更。'}]},
 ];
 
 const categories = ['すべて', '食品', 'コスメ', '日用品', 'ファッション', '健康・美容', 'IT・SaaS'];
@@ -486,12 +609,11 @@ document.querySelectorAll('.nav-btn').forEach(btn => {
     const pg = btn.dataset.page;
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById('page-' + pg).classList.add('active');
-    // サイドバーはWorksのみ表示
     document.getElementById('sidebar').classList.toggle('hidden', pg !== 'works');
   });
 });
 
-// ─── Sidebar ───
+// ─── Sidebar（PC用）───
 const sidebar = document.getElementById('sidebar');
 const lbl = document.createElement('div');
 lbl.className = 'sidebar-label'; lbl.textContent = 'Category';
@@ -507,10 +629,36 @@ categories.forEach(cat => {
   btn.addEventListener('click', e => {
     currentCat = cat;
     document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.mobile-cat-chip').forEach(b => b.classList.remove('active'));
     e.currentTarget.classList.add('active');
+    // スマホ側のチップも同期
+    document.querySelectorAll('.mobile-cat-chip').forEach(chip => {
+      if (chip.dataset.cat === cat) chip.classList.add('active');
+    });
     renderGrid();
   });
   sidebar.appendChild(btn);
+});
+
+// ─── スマホ用カテゴリチップ ───
+const mobileCatBar = document.getElementById('mobile-cat-bar');
+categories.forEach(cat => {
+  const chip = document.createElement('button');
+  chip.className = 'mobile-cat-chip' + (cat === 'すべて' ? ' active' : '');
+  chip.dataset.cat = cat;
+  chip.textContent = cat;
+  chip.addEventListener('click', () => {
+    currentCat = cat;
+    document.querySelectorAll('.mobile-cat-chip').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+    chip.classList.add('active');
+    // PC側サイドバーも同期
+    document.querySelectorAll('.cat-btn').forEach(btn => {
+      if (btn.textContent.trim().startsWith(cat)) btn.classList.add('active');
+    });
+    renderGrid();
+  });
+  mobileCatBar.appendChild(chip);
 });
 
 // ─── Grid ───
@@ -526,7 +674,18 @@ function renderGrid() {
     card.className = 'card';
     card.style.animationDelay = (i * 0.05) + 's';
     const isClient = item.type === 'client';
-    card.innerHTML = `<div class="card-thumb"><div class="card-thumb-inner" style="background:${item.bg}"><span style="font-size:52px">${item.emoji}</span><div style="position:absolute;bottom:0;left:0;right:0;height:50%;background:linear-gradient(to top,${item.bg},transparent);"></div></div></div><div class="card-info"><div class="card-title">${item.title}</div><span class="card-badge ${isClient ? 'badge-client' : 'badge-self'}">${isClient ? 'CLIENT WORK' : '自主制作'}</span></div>`;
+    card.innerHTML = `
+      <div class="card-thumb">
+        <div class="card-thumb-inner" style="background:${item.bg}">
+          <img src="${item.img}" alt="${item.title}" onerror="this.style.display='none';">
+          <span style="font-size:52px;position:relative;z-index:1;">${item.emoji}</span>
+          <div style="position:absolute;bottom:0;left:0;right:0;height:50%;background:linear-gradient(to top,${item.bg},transparent);z-index:2;"></div>
+        </div>
+      </div>
+      <div class="card-info">
+        <div class="card-title">${item.title}</div>
+        <span class="card-badge ${isClient ? 'badge-client' : 'badge-self'}">${isClient ? 'CLIENT WORK' : '自主制作'}</span>
+      </div>`;
     card.addEventListener('click', () => openPopup(item));
     grid.appendChild(card);
   });
@@ -538,8 +697,34 @@ function openPopup(item) {
   const badge = document.getElementById('popup-badge');
   badge.textContent = item.type === 'client' ? 'CLIENT WORK' : '自主制作';
   badge.className = 'card-badge ' + (item.type === 'client' ? 'badge-client' : 'badge-self');
-  const featuresHtml = item.features.map(f => `<div class="lp-feature-item" style="background:${item.bg}"><div class="lp-feature-icon">${f.icon}</div><div class="lp-feature-title" style="color:${item.color}">${f.title}</div><div class="lp-feature-text">${f.text}</div></div>`).join('');
-  document.getElementById('lp-content').innerHTML = `<div style="background:${item.bg};border-bottom:1px solid rgba(0,0,0,0.08);"><div class="lp-section lp-hero"><div class="lp-hero-badge" style="color:${item.accent}">${item.category} / ${item.type === 'client' ? 'Client Work' : '自主制作'}</div><div class="lp-hero-title" style="color:${item.color}">${item.heroTitle.replace('\n','<br>')}</div><div class="lp-hero-sub" style="color:${item.color}">${item.heroCopy}</div><a class="lp-cta" style="background:${item.color};color:#fff;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:0.12em;">今すぐ申し込む →</a></div></div><hr class="lp-divider" style="border-color:${item.color};margin-top:0;"><div class="lp-section"><div style="font-family:'Shippori Mincho',serif;font-size:22px;font-weight:700;color:${item.color};margin-bottom:8px;">選ばれる3つの理由</div><div style="font-size:12px;color:var(--muted);margin-bottom:32px;">Features</div><div class="lp-feature-grid">${featuresHtml}</div></div><hr class="lp-divider" style="border-color:${item.color};"><div class="lp-section" style="background:${item.color};color:#fff;padding:60px 40px;"><div style="font-family:'Shippori Mincho',serif;font-size:26px;font-weight:700;margin-bottom:16px;">まずは無料でお試しください</div><div style="font-size:13px;opacity:0.8;max-width:400px;margin:0 auto 32px;line-height:1.8;">14日間の無料トライアル。クレジットカード不要。いつでもキャンセルできます。</div><a class="lp-cta" style="background:#fff;color:${item.color};font-family:'DM Mono',monospace;font-size:12px;letter-spacing:0.12em;">無料で始める →</a></div>`;
+  const featuresHtml = item.features.map(f =>
+    `<div class="lp-feature-item" style="background:${item.bg}">
+      <div class="lp-feature-icon">${f.icon}</div>
+      <div class="lp-feature-title" style="color:${item.color}">${f.title}</div>
+      <div class="lp-feature-text">${f.text}</div>
+    </div>`
+  ).join('');
+  document.getElementById('lp-content').innerHTML = `
+    <div style="background:${item.bg};border-bottom:1px solid rgba(0,0,0,0.08);">
+      <div class="lp-section lp-hero">
+        <div class="lp-hero-badge" style="color:${item.accent}">${item.category} / ${item.type === 'client' ? 'Client Work' : '自主制作'}</div>
+        <div class="lp-hero-title" style="color:${item.color}">${item.heroTitle.replace('\n','<br>')}</div>
+        <div class="lp-hero-sub" style="color:${item.color}">${item.heroCopy}</div>
+        <a class="lp-cta" style="background:${item.color};color:#fff;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:0.12em;">今すぐ申し込む →</a>
+      </div>
+    </div>
+    <hr class="lp-divider" style="border-color:${item.color};margin-top:0;">
+    <div class="lp-section">
+      <div style="font-family:'Shippori Mincho',serif;font-size:22px;font-weight:700;color:${item.color};margin-bottom:8px;">選ばれる3つの理由</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:32px;">Features</div>
+      <div class="lp-feature-grid">${featuresHtml}</div>
+    </div>
+    <hr class="lp-divider" style="border-color:${item.color};">
+    <div class="lp-section" style="background:${item.color};color:#fff;padding:60px 40px;">
+      <div style="font-family:'Shippori Mincho',serif;font-size:26px;font-weight:700;margin-bottom:16px;">まずは無料でお試しください</div>
+      <div style="font-size:13px;opacity:0.8;max-width:400px;margin:0 auto 32px;line-height:1.8;">14日間の無料トライアル。クレジットカード不要。いつでもキャンセルできます。</div>
+      <a class="lp-cta" style="background:#fff;color:${item.color};font-family:'DM Mono',monospace;font-size:12px;letter-spacing:0.12em;">無料で始める →</a>
+    </div>`;
   document.getElementById('lp-content').scrollTop = 0;
   document.getElementById('overlay').classList.add('active');
   document.body.style.overflow = 'hidden';
@@ -560,6 +745,7 @@ function submitForm(e) {
   document.getElementById('form-sent').classList.add('show');
 }
 
+// ─── Init ───
 renderGrid();
 </script>
 </body>
