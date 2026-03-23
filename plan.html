@@ -1,4 +1,3 @@
-
 <style>
 .metric { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 1rem; text-align: center; }
 .metric-label { font-size: 12px; color: var(--color-text-secondary); margin: 0 0 4px; }
@@ -11,9 +10,9 @@
 
 <div style="display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 10px; margin-bottom: 1.5rem;">
   <div class="metric"><p class="metric-label">月売上目標</p><p class="metric-value" id="m-sales">100万円</p></div>
-  <div class="metric"><p class="metric-label">月経費・税金</p><p class="metric-value" id="m-cost">45万円</p><p class="metric-sub">売上の45%想定</p></div>
-  <div class="metric"><p class="metric-label">月手取り</p><p class="metric-value" id="m-take">55万円</p></div>
-  <div class="metric"><p class="metric-label">月貯蓄額</p><p class="metric-value" id="m-save">35万円</p><p class="metric-sub">手取りの64%</p></div>
+  <div class="metric"><p class="metric-label">月経費・税金</p><p class="metric-value" id="m-cost">35万円</p><p class="metric-sub">売上の35%想定</p></div>
+  <div class="metric"><p class="metric-label">月手取り</p><p class="metric-value" id="m-take">65万円</p></div>
+  <div class="metric"><p class="metric-label">月貯蓄額</p><p class="metric-value" id="m-save">50万円</p><p class="metric-sub">手取りの77%</p></div>
 </div>
 
 <div style="margin-bottom: 1.5rem;">
@@ -24,13 +23,13 @@
   </div>
   <div class="slider-row">
     <span class="slider-label">経費率（税込）</span>
-    <input type="range" min="30" max="70" value="45" step="1" id="sl-cost" style="flex:1" oninput="recalc()">
-    <span class="slider-val" id="lbl-cost">45%</span>
+    <input type="range" min="30" max="70" value="35" step="1" id="sl-cost" style="flex:1" oninput="recalc()">
+    <span class="slider-val" id="lbl-cost">35%</span>
   </div>
   <div class="slider-row">
     <span class="slider-label">生活費</span>
-    <input type="range" min="10" max="30" value="20" step="1" id="sl-life" style="flex:1" oninput="recalc()">
-    <span class="slider-val" id="lbl-life">20万円</span>
+    <input type="range" min="10" max="30" value="15" step="1" id="sl-life" style="flex:1" oninput="recalc()">
+    <span class="slider-val" id="lbl-life">15万円</span>
   </div>
 </div>
 
@@ -62,8 +61,10 @@ function recalc() {
 
   document.getElementById('m-sales').textContent = sales + '万円';
   document.getElementById('m-cost').textContent = cost + '万円';
+  document.getElementById('m-cost').nextElementSibling.textContent = '売上の' + (costRate * 100).toFixed(0) + '%想定';
   document.getElementById('m-take').textContent = take + '万円';
   document.getElementById('m-save').textContent = save + '万円';
+  document.getElementById('m-save').nextElementSibling.textContent = '手取りの' + Math.round(save/take*100) + '%';
 
   const labels = [];
   const data = [];
@@ -91,20 +92,43 @@ function recalc() {
   if (myChart) {
     myChart.data.labels = labels;
     myChart.data.datasets[0].data = data;
-    myChart.options.plugins.annotation = buildAnnotation(goal, coralColor);
+    myChart.data.datasets[0].backgroundColor = data.map(v => v >= goal ? '#0F6E56' : tealColor);
+    myChart.data.datasets = myChart.data.datasets.filter(d => d.label !== 'goal-line');
+    myChart.data.datasets.push({
+      label: 'goal-line',
+      type: 'line',
+      data: Array(months).fill(goal),
+      borderColor: coralColor,
+      borderWidth: 1.5,
+      borderDash: [5, 4],
+      pointRadius: 0,
+      fill: false
+    });
     myChart.update();
   } else {
     myChart = new Chart(document.getElementById('chart'), {
       type: 'bar',
       data: {
         labels,
-        datasets: [{
-          label: '累積貯蓄（万円）',
-          data,
-          backgroundColor: data.map(v => v >= goal ? '#0F6E56' : tealColor),
-          borderRadius: 2,
-          borderSkipped: false
-        }]
+        datasets: [
+          {
+            label: '累積貯蓄（万円）',
+            data,
+            backgroundColor: data.map(v => v >= goal ? '#0F6E56' : tealColor),
+            borderRadius: 2,
+            borderSkipped: false
+          },
+          {
+            label: 'goal-line',
+            type: 'line',
+            data: Array(months).fill(goal),
+            borderColor: coralColor,
+            borderWidth: 1.5,
+            borderDash: [5, 4],
+            pointRadius: 0,
+            fill: false
+          }
+        ]
       },
       options: {
         responsive: true,
@@ -137,24 +161,6 @@ function recalc() {
         }
       }
     });
-  }
-
-  const goalY = goal;
-  const ctx2 = document.getElementById('chart');
-  if (myChart) {
-    myChart.data.datasets = myChart.data.datasets.filter(d => d.label !== 'goal-line');
-    myChart.data.datasets.push({
-      label: 'goal-line',
-      type: 'line',
-      data: Array(months).fill(goalY),
-      borderColor: coralColor,
-      borderWidth: 1.5,
-      borderDash: [5, 4],
-      pointRadius: 0,
-      fill: false
-    });
-    myChart.data.datasets[0].backgroundColor = data.map(v => v >= goal ? '#0F6E56' : tealColor);
-    myChart.update();
   }
 }
 
