@@ -1,48 +1,302 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>プラン</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
-.metric { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 1rem; text-align: center; }
-.metric-label { font-size: 12px; color: var(--color-text-secondary); margin: 0 0 4px; }
-.metric-value { font-size: 22px; font-weight: 500; color: var(--color-text-primary); margin: 0; }
-.metric-sub { font-size: 11px; color: var(--color-text-tertiary); margin: 4px 0 0; }
-.slider-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
-.slider-label { font-size: 13px; color: var(--color-text-secondary); width: 100px; flex-shrink: 0; }
-.slider-val { font-size: 13px; font-weight: 500; color: var(--color-text-primary); width: 72px; text-align: right; flex-shrink: 0; }
-</style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-<div style="display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 10px; margin-bottom: 1.5rem;">
-  <div class="metric"><p class="metric-label">月売上目標</p><p class="metric-value" id="m-sales">100万円</p></div>
-  <div class="metric"><p class="metric-label">月経費・税金</p><p class="metric-value" id="m-cost">35万円</p><p class="metric-sub">売上の35%想定</p></div>
-  <div class="metric"><p class="metric-label">月手取り</p><p class="metric-value" id="m-take">65万円</p></div>
-  <div class="metric"><p class="metric-label">月貯蓄額</p><p class="metric-value" id="m-save">50万円</p><p class="metric-sub">手取りの77%</p></div>
+  :root {
+    --bg: #0f0f0f;
+    --bg2: #181818;
+    --bg3: #222;
+    --text: #f0ede8;
+    --text2: #999;
+    --text3: #555;
+    --accent: #1D9E75;
+    --accent2: #D85A30;
+    --radius: 12px;
+    --gap: 12px;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    padding: 24px 16px 48px;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  /* ── Page title ── */
+  .page-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(22px, 5vw, 32px);
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    margin-bottom: 28px;
+    color: var(--text);
+  }
+  .page-title span { color: var(--accent); font-style: italic; }
+
+  /* ── Section heading ── */
+  .section-heading {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(16px, 3.5vw, 20px);
+    font-weight: 400;
+    color: var(--text);
+    margin: 0 0 14px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .section-heading::after {
+    content: ''; flex: 1; height: 1px;
+    background: linear-gradient(to right, var(--text3), transparent);
+  }
+
+  /* ── Metrics grid ── */
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--gap);
+    margin-bottom: 20px;
+  }
+  @media (min-width: 480px) {
+    .metrics-grid { grid-template-columns: repeat(4, 1fr); }
+  }
+
+  .metric {
+    background: var(--bg2);
+    border: 1px solid #2a2a2a;
+    border-radius: var(--radius);
+    padding: 14px 12px;
+    text-align: center;
+  }
+  .metric-label { font-size: 11px; color: var(--text2); margin-bottom: 6px; }
+  .metric-value { font-size: clamp(18px, 4vw, 22px); font-weight: 500; color: var(--text); }
+  .metric-sub { font-size: 10px; color: var(--text3); margin-top: 4px; }
+
+  /* ── Sliders ── */
+  .sliders-block {
+    background: var(--bg2);
+    border: 1px solid #2a2a2a;
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .slider-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .slider-label { font-size: 12px; color: var(--text2); width: 90px; flex-shrink: 0; }
+  .slider-input { flex: 1; min-width: 100px; accent-color: var(--accent); height: 4px; cursor: pointer; }
+  .slider-val { font-size: 13px; font-weight: 500; color: var(--text); width: 68px; text-align: right; flex-shrink: 0; }
+
+  /* ── Chart ── */
+  .chart-wrap {
+    background: var(--bg2);
+    border: 1px solid #2a2a2a;
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 8px;
+  }
+  .chart-canvas-wrap {
+    position: relative;
+    width: 100%;
+    height: clamp(180px, 40vw, 260px);
+  }
+
+  .chart-legend {
+    display: flex; gap: 16px;
+    font-size: 11px; color: var(--text2);
+    margin-top: 10px; flex-wrap: wrap;
+  }
+  .chart-legend span { display: flex; align-items: center; gap: 5px; }
+
+  .reach-msg {
+    font-size: 12px; color: var(--text2);
+    margin: 12px 0 28px;
+    padding: 10px 14px;
+    background: var(--bg2);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 6px 6px 0;
+  }
+
+  /* ── Action cards ── */
+  .action-cards {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--gap);
+  }
+  @media (min-width: 520px) {
+    .action-cards { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  .action-card {
+    border-radius: var(--radius);
+    padding: 18px 16px 14px;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+  }
+  .action-card:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(0,0,0,0.3); }
+
+  .card-high { background: linear-gradient(145deg, #0d3d2e, #1a5c41); }
+  .card-mid  { background: linear-gradient(145deg, #1e1650, #2e2470); }
+  .card-cat  { background: linear-gradient(145deg, #4a2000, #7a3810); }
+
+  .card-icon { font-size: 24px; margin-bottom: 10px; display: block; }
+  .card-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 15px; font-weight: 400; color: #fff;
+    margin-bottom: 5px; line-height: 1.3;
+  }
+  .card-desc { font-size: 11px; color: rgba(255,255,255,0.5); margin-bottom: 14px; line-height: 1.5; }
+
+  .task-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .task-item { display: flex; align-items: flex-start; gap: 9px; cursor: pointer; }
+
+  .task-cb {
+    appearance: none; -webkit-appearance: none;
+    width: 16px; height: 16px; min-width: 16px;
+    border: 1.5px solid rgba(255,255,255,0.3);
+    border-radius: 4px; margin-top: 1px; cursor: pointer;
+    position: relative; transition: background 0.15s, border-color 0.15s;
+  }
+  .task-cb:checked { background: rgba(255,255,255,0.9); border-color: rgba(255,255,255,0.9); }
+  .task-cb:checked::after {
+    content: ''; position: absolute;
+    left: 3.5px; top: 1px; width: 5px; height: 9px;
+    border: 2px solid #1a1a1a; border-top: none; border-left: none;
+    transform: rotate(45deg);
+  }
+
+  .task-label { font-size: 12px; color: rgba(255,255,255,0.75); line-height: 1.45; cursor: pointer; transition: color 0.15s; }
+  .task-item input:checked + .task-label { color: rgba(255,255,255,0.28); text-decoration: line-through; }
+
+  .card-progress { margin-top: 14px; display: flex; align-items: center; gap: 8px; }
+  .progress-bar-bg { flex: 1; height: 3px; background: rgba(255,255,255,0.12); border-radius: 99px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: rgba(255,255,255,0.6); border-radius: 99px; transition: width 0.3s ease; }
+  .progress-pct { font-size: 10px; color: rgba(255,255,255,0.38); min-width: 26px; text-align: right; }
+</style>
+</head>
+<body>
+
+<h1 class="page-title">収支 <span>&</span> アクションプラン</h1>
+
+<!-- Metrics -->
+<h2 class="section-heading">月間サマリー</h2>
+<div class="metrics-grid">
+  <div class="metric">
+    <div class="metric-label">月売上目標</div>
+    <div class="metric-value" id="m-sales">100万円</div>
+  </div>
+  <div class="metric">
+    <div class="metric-label">月経費・税金</div>
+    <div class="metric-value" id="m-cost">35万円</div>
+    <div class="metric-sub" id="m-cost-sub">売上の35%想定</div>
+  </div>
+  <div class="metric">
+    <div class="metric-label">月手取り</div>
+    <div class="metric-value" id="m-take">65万円</div>
+  </div>
+  <div class="metric">
+    <div class="metric-label">月貯蓄額</div>
+    <div class="metric-value" id="m-save">50万円</div>
+    <div class="metric-sub" id="m-save-sub">手取りの77%</div>
+  </div>
 </div>
 
-<div style="margin-bottom: 1.5rem;">
+<!-- Sliders -->
+<div class="sliders-block">
   <div class="slider-row">
     <span class="slider-label">月売上</span>
-    <input type="range" min="50" max="200" value="100" step="5" id="sl-sales" style="flex:1" oninput="recalc()">
+    <input type="range" class="slider-input" min="50" max="200" value="100" step="5" id="sl-sales" oninput="recalc()">
     <span class="slider-val" id="lbl-sales">100万円</span>
   </div>
   <div class="slider-row">
     <span class="slider-label">経費率（税込）</span>
-    <input type="range" min="30" max="70" value="35" step="1" id="sl-cost" style="flex:1" oninput="recalc()">
+    <input type="range" class="slider-input" min="30" max="70" value="35" step="1" id="sl-cost" oninput="recalc()">
     <span class="slider-val" id="lbl-cost">35%</span>
   </div>
   <div class="slider-row">
     <span class="slider-label">生活費</span>
-    <input type="range" min="10" max="30" value="15" step="1" id="sl-life" style="flex:1" oninput="recalc()">
+    <input type="range" class="slider-input" min="10" max="30" value="15" step="1" id="sl-life" oninput="recalc()">
     <span class="slider-val" id="lbl-life">15万円</span>
   </div>
 </div>
 
-<div style="position: relative; width: 100%; height: 260px; margin-bottom: 0.5rem;">
-  <canvas id="chart"></canvas>
+<!-- Chart -->
+<h2 class="section-heading">貯蓄シミュレーション</h2>
+<div class="chart-wrap">
+  <div class="chart-canvas-wrap">
+    <canvas id="chart"></canvas>
+  </div>
+  <div class="chart-legend">
+    <span><span style="width:10px;height:10px;border-radius:2px;background:#1D9E75;display:inline-block"></span>累積貯蓄</span>
+    <span><span style="width:10px;height:3px;background:#D85A30;display:inline-block;margin-top:3px"></span>目標1,000万円</span>
+  </div>
 </div>
-<div style="display: flex; gap: 20px; font-size: 12px; color: var(--color-text-secondary); margin-top: 6px;">
-  <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:#1D9E75;display:inline-block"></span>累積貯蓄</span>
-  <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:3px;background:#D85A30;display:inline-block"></span>目標1,000万円</span>
-</div>
-<p id="reach-msg" style="margin: 10px 0 0; font-size: 13px; color: var(--color-text-secondary);"></p>
+<p class="reach-msg" id="reach-msg"></p>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<!-- Action Plan -->
+<h2 class="section-heading">Action Plan</h2>
+<div class="action-cards">
+
+  <div class="action-card card-high">
+    <span class="card-icon">🏆</span>
+    <p class="card-title">高単価案件の獲得</p>
+    <p class="card-desc">HP制作など単価の高い案件を継続的に受注する</p>
+    <ul class="task-list" id="tasks-0">
+      <li class="task-item"><input type="checkbox" class="task-cb" onchange="updateProgress(0)"><label class="task-label">ランサーズでパッケージ販売</label></li>
+      <li class="task-item"><input type="checkbox" class="task-cb" onchange="updateProgress(0)"><label class="task-label">クライアントへの提案資料を作成</label></li>
+      <li class="task-item"><input type="checkbox" class="task-cb" onchange="updateProgress(0)"><label class="task-label">SNS・広告で発信</label></li>
+      <li class="task-item"><input type="checkbox" class="task-cb" onchange="updateProgress(0)"><label class="task-label">ポートフォリオ充実化</label></li>
+    </ul>
+    <div class="card-progress">
+      <div class="progress-bar-bg"><div class="progress-bar-fill" id="prog-0" style="width:0%"></div></div>
+      <span class="progress-pct" id="pct-0">0%</span>
+    </div>
+  </div>
+
+  <div class="action-card card-mid">
+    <span class="card-icon">⚡</span>
+    <p class="card-title">LP・HPのフォーマット販売</p>
+    <p class="card-desc">テンプレート化で工数削減→案件数を増やす</p>
+    <ul class="task-list" id="tasks-1">
+      <li class="task-item"><input type="checkbox" class="task-cb" onchange="updateProgress(1)"><label class="task-label">AIでテンプレート量産</label></li>
+      <li class="task-item"><input type="checkbox" class="task-cb" onchange="updateProgress(1)"><label class="task-label">通常より低コストで販売</label></li>
+      <li class="task-item"><input type="checkbox" class="task-cb" onchange="updateProgress(1)"><label class="task-label">可能ならRMSでパッケージ化</label></li>
+      <li class="task-item"><input type="checkbox" class="task-cb" onchange="updateProgress(1)"><label class="task-label">料金表を整える</label></li>
+    </ul>
+    <div class="card-progress">
+      <div class="progress-bar-bg"><div class="progress-bar-fill" id="prog-1" style="width:0%"></div></div>
+      <span class="progress-pct" id="pct-1">0%</span>
+    </div>
+  </div>
+
+  <div class="action-card card-cat">
+    <span class="card-icon">🐱</span>
+    <p class="card-title">猫雑貨のマルシェ出店</p>
+    <p class="card-desc">ハンドメイド・猫雑貨でリアルイベントに出店</p>
+    <ul class="task-list" id="tasks-2">
+      <li class="task-item"><input type="checkbox" class="task-cb" onchange="updateProgress(2)"><label class="task-label">出店できるマルシェ・イベントを調査</label></li>
+      <li class="task-item"><input type="checkbox" class="task-cb" onchange="updateProgress(2)"><label class="task-label">販売商品ラインナップを決定</label></li>
+      <li class="task-item"><input type="checkbox" class="task-cb" onchange="updateProgress(2)"><label class="task-label">ディスプレイ・什器を準備</label></li>
+      <li class="task-item"><input type="checkbox" class="task-cb" onchange="updateProgress(2)"><label class="task-label">食品販売も視野にいれる</label></li>
+    </ul>
+    <div class="card-progress">
+      <div class="progress-bar-bg"><div class="progress-bar-fill" id="prog-2" style="width:0%"></div></div>
+      <span class="progress-pct" id="pct-2">0%</span>
+    </div>
+  </div>
+
+</div>
+
 <script>
 let myChart = null;
 
@@ -61,15 +315,13 @@ function recalc() {
 
   document.getElementById('m-sales').textContent = sales + '万円';
   document.getElementById('m-cost').textContent = cost + '万円';
-  document.getElementById('m-cost').nextElementSibling.textContent = '売上の' + (costRate * 100).toFixed(0) + '%想定';
+  document.getElementById('m-cost-sub').textContent = '売上の' + (costRate * 100).toFixed(0) + '%想定';
   document.getElementById('m-take').textContent = take + '万円';
   document.getElementById('m-save').textContent = save + '万円';
-  document.getElementById('m-save').nextElementSibling.textContent = '手取りの' + Math.round(save/take*100) + '%';
+  document.getElementById('m-save-sub').textContent = take > 0 ? '手取りの' + Math.round(save / take * 100) + '%' : '';
 
-  const labels = [];
-  const data = [];
-  const months = 36;
-  let goal = 1000;
+  const labels = [], data = [];
+  const months = 36, goal = 1000;
   let reachMonth = null;
 
   for (let m = 1; m <= months; m++) {
@@ -82,28 +334,18 @@ function recalc() {
   }
 
   const msg = reachMonth
-    ? reachMonth + 'ヶ月目（' + Math.ceil(reachMonth/12) + '年' + (reachMonth%12===0?12:reachMonth%12) + 'ヶ月後）に1,000万円達成見込み'
-    : '3年間では1,000万円に届かない試算です。売上アップか経費削減を検討を';
+    ? reachMonth + 'ヶ月目（' + Math.ceil(reachMonth / 12) + '年' + (reachMonth % 12 === 0 ? 12 : reachMonth % 12) + 'ヶ月後）に1,000万円達成見込み 🎉'
+    : '3年間では1,000万円に届かない試算です。売上アップか経費削減を検討しましょう。';
   document.getElementById('reach-msg').textContent = msg;
 
-  const tealColor = '#1D9E75';
-  const coralColor = '#D85A30';
+  const tealColor = '#1D9E75', coralColor = '#D85A30';
+  const bgColors = data.map(v => v >= goal ? '#0F6E56' : tealColor);
 
   if (myChart) {
     myChart.data.labels = labels;
     myChart.data.datasets[0].data = data;
-    myChart.data.datasets[0].backgroundColor = data.map(v => v >= goal ? '#0F6E56' : tealColor);
-    myChart.data.datasets = myChart.data.datasets.filter(d => d.label !== 'goal-line');
-    myChart.data.datasets.push({
-      label: 'goal-line',
-      type: 'line',
-      data: Array(months).fill(goal),
-      borderColor: coralColor,
-      borderWidth: 1.5,
-      borderDash: [5, 4],
-      pointRadius: 0,
-      fill: false
-    });
+    myChart.data.datasets[0].backgroundColor = bgColors;
+    myChart.data.datasets[1].data = Array(months).fill(goal);
     myChart.update();
   } else {
     myChart = new Chart(document.getElementById('chart'), {
@@ -111,23 +353,8 @@ function recalc() {
       data: {
         labels,
         datasets: [
-          {
-            label: '累積貯蓄（万円）',
-            data,
-            backgroundColor: data.map(v => v >= goal ? '#0F6E56' : tealColor),
-            borderRadius: 2,
-            borderSkipped: false
-          },
-          {
-            label: 'goal-line',
-            type: 'line',
-            data: Array(months).fill(goal),
-            borderColor: coralColor,
-            borderWidth: 1.5,
-            borderDash: [5, 4],
-            pointRadius: 0,
-            fill: false
-          }
+          { label: '累積貯蓄（万円）', data, backgroundColor: bgColors, borderRadius: 2, borderSkipped: false },
+          { label: 'goal-line', type: 'line', data: Array(months).fill(goal), borderColor: coralColor, borderWidth: 1.5, borderDash: [5, 4], pointRadius: 0, fill: false }
         ]
       },
       options: {
@@ -135,34 +362,27 @@ function recalc() {
         maintainAspectRatio: false,
         plugins: {
           legend: { display: false },
-          tooltip: {
-            callbacks: {
-              label: ctx => '累積: ' + ctx.parsed.y + '万円'
-            }
-          }
+          tooltip: { callbacks: { label: ctx => '累積: ' + ctx.parsed.y + '万円' } }
         },
         scales: {
-          x: {
-            ticks: {
-              maxTicksLimit: 12,
-              font: { size: 10 },
-              color: '#888780'
-            },
-            grid: { display: false }
-          },
-          y: {
-            ticks: {
-              font: { size: 11 },
-              color: '#888780',
-              callback: v => v + '万'
-            },
-            grid: { color: 'rgba(136,135,128,0.15)' }
-          }
+          x: { ticks: { maxTicksLimit: 12, font: { size: 10 }, color: '#666' }, grid: { display: false } },
+          y: { ticks: { font: { size: 11 }, color: '#666', callback: v => v + '万' }, grid: { color: 'rgba(255,255,255,0.06)' } }
         }
       }
     });
   }
 }
 
+function updateProgress(i) {
+  const tasks = document.getElementById('tasks-' + i);
+  const all = tasks.querySelectorAll('.task-cb');
+  const checked = tasks.querySelectorAll('.task-cb:checked');
+  const pct = Math.round(checked.length / all.length * 100);
+  document.getElementById('prog-' + i).style.width = pct + '%';
+  document.getElementById('pct-' + i).textContent = pct + '%';
+}
+
 recalc();
 </script>
+</body>
+</html>
