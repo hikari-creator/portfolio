@@ -1,388 +1,619 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>プラン</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap');
 
   :root {
-    --bg: #0f0f0f;
-    --bg2: #181818;
-    --bg3: #222;
-    --text: #f0ede8;
-    --text2: #999;
-    --text3: #555;
-    --accent: #1D9E75;
-    --accent2: #D85A30;
-    --radius: 12px;
-    --gap: 12px;
+    --ink: #1a1a18;
+    --ink2: #4a4a44;
+    --ink3: #8a8a80;
+    --paper: #fafaf7;
+    --surface: #f2f2ee;
+    --border: #e0e0d8;
+    --green: #2d7a4f;
+    --green-bg: #e8f5ee;
+    --amber: #a05c00;
+    --amber-bg: #fef3e2;
+    --red: #c0392b;
+    --red-bg: #fdecea;
+    --accent: #2d5a8e;
+    --accent-bg: #eaf0f8;
+    --mono: 'DM Mono', monospace;
+    --sans: 'Noto Sans JP', sans-serif;
   }
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    line-height: 1.5;
-    padding: 24px 16px 48px;
-    max-width: 760px;
-    margin: 0 auto;
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  .app {
+    font-family: var(--sans);
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 600px;
+    padding: 0 0 40px;
   }
 
-  /* ── Page title ── */
-  .page-title {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(22px, 5vw, 32px);
-    font-weight: 400;
-    letter-spacing: 0.02em;
-    margin-bottom: 28px;
-    color: var(--text);
+  /* Header */
+  .header {
+    background: var(--ink);
+    color: #fff;
+    padding: 20px 24px 18px;
+    position: relative;
+    overflow: hidden;
   }
-  .page-title span { color: var(--accent); font-style: italic; }
+  .header::after {
+    content: '¥';
+    position: absolute;
+    right: 20px;
+    top: -10px;
+    font-size: 80px;
+    font-family: var(--mono);
+    font-weight: 500;
+    opacity: 0.07;
+    line-height: 1;
+  }
+  .header-title {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    margin-bottom: 3px;
+  }
+  .header-sub {
+    font-size: 12px;
+    opacity: 0.55;
+    letter-spacing: 0.05em;
+  }
 
-  /* ── Section heading ── */
-  .section-heading {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(16px, 3.5vw, 20px);
-    font-weight: 400;
-    color: var(--text);
-    margin: 0 0 14px;
-    display: flex; align-items: center; gap: 10px;
-  }
-  .section-heading::after {
-    content: ''; flex: 1; height: 1px;
-    background: linear-gradient(to right, var(--text3), transparent);
-  }
-
-  /* ── Metrics grid ── */
-  .metrics-grid {
+  /* Tabs */
+  .tabs {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--gap);
-    margin-bottom: 20px;
+    grid-template-columns: repeat(4,1fr);
+    background: var(--ink);
+    border-top: 1px solid rgba(255,255,255,0.1);
   }
-  @media (min-width: 480px) {
-    .metrics-grid { grid-template-columns: repeat(4, 1fr); }
-  }
-
-  .metric {
-    background: var(--bg2);
-    border: 1px solid #2a2a2a;
-    border-radius: var(--radius);
-    padding: 14px 12px;
+  .tab {
+    padding: 10px 6px;
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.45);
+    font-family: var(--sans);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    border-top: 2px solid transparent;
+    letter-spacing: 0.03em;
     text-align: center;
   }
-  .metric-label { font-size: 11px; color: var(--text2); margin-bottom: 6px; }
-  .metric-value { font-size: clamp(18px, 4vw, 22px); font-weight: 500; color: var(--text); }
-  .metric-sub { font-size: 10px; color: var(--text3); margin-top: 4px; }
-
-  /* ── Sliders ── */
-  .sliders-block {
-    background: var(--bg2);
-    border: 1px solid #2a2a2a;
-    border-radius: var(--radius);
-    padding: 16px;
-    margin-bottom: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
+  .tab:hover { color: rgba(255,255,255,0.75); }
+  .tab.active {
+    color: #fff;
+    border-top-color: #fff;
+    background: rgba(255,255,255,0.06);
   }
 
-  .slider-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-  .slider-label { font-size: 12px; color: var(--text2); width: 90px; flex-shrink: 0; }
-  .slider-input { flex: 1; min-width: 100px; accent-color: var(--accent); height: 4px; cursor: pointer; }
-  .slider-val { font-size: 13px; font-weight: 500; color: var(--text); width: 68px; text-align: right; flex-shrink: 0; }
+  /* Panels */
+  .panel { display: none; padding: 20px 20px 0; }
+  .panel.active { display: block; }
 
-  /* ── Chart ── */
-  .chart-wrap {
-    background: var(--bg2);
-    border: 1px solid #2a2a2a;
-    border-radius: var(--radius);
-    padding: 16px;
-    margin-bottom: 8px;
+  /* Section label */
+  .slabel {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink3);
+    margin-bottom: 10px;
+    margin-top: 22px;
   }
-  .chart-canvas-wrap {
-    position: relative;
-    width: 100%;
-    height: clamp(180px, 40vw, 260px);
-  }
+  .slabel:first-child { margin-top: 0; }
 
-  .chart-legend {
-    display: flex; gap: 16px;
-    font-size: 11px; color: var(--text2);
-    margin-top: 10px; flex-wrap: wrap;
-  }
-  .chart-legend span { display: flex; align-items: center; gap: 5px; }
-
-  .reach-msg {
-    font-size: 12px; color: var(--text2);
-    margin: 12px 0 28px;
-    padding: 10px 14px;
-    background: var(--bg2);
-    border-left: 3px solid var(--accent);
-    border-radius: 0 6px 6px 0;
+  /* Card */
+  .card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+    margin-bottom: 14px;
   }
 
-  /* ── Action cards ── */
-  .action-cards {
+  /* Metric grid */
+  .mgrid {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--gap);
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 14px;
   }
-  @media (min-width: 520px) {
-    .action-cards { grid-template-columns: repeat(3, 1fr); }
+  .mcard {
+    background: var(--surface);
+    border-radius: 8px;
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+  }
+  .mcard-label { font-size: 11px; color: var(--ink3); margin-bottom: 4px; letter-spacing: 0.04em; }
+  .mcard-val { font-size: 20px; font-weight: 700; font-family: var(--mono); color: var(--ink); line-height: 1.1; }
+  .mcard-sub { font-size: 11px; color: var(--ink3); margin-top: 3px; font-family: var(--mono); }
+  .mcard-val.ok { color: var(--green); }
+  .mcard-val.warn { color: var(--amber); }
+  .mcard-val.bad { color: var(--red); }
+
+  /* Input row */
+  .irow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .irow:last-child { border-bottom: none; padding-bottom: 0; }
+  .irow:first-child { padding-top: 0; }
+  .irow label {
+    font-size: 13px;
+    color: var(--ink2);
+    flex: 1;
+    line-height: 1.3;
+  }
+  .irow input {
+    width: 110px;
+    padding: 6px 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--surface);
+    color: var(--ink);
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 500;
+    text-align: right;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .irow input:focus { border-color: var(--accent); background: #fff; }
+  .irow .unit { font-size: 12px; color: var(--ink3); min-width: 22px; text-align: left; }
+
+  /* PL table */
+  .pl-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    font-size: 13px;
+    border-bottom: 1px solid var(--border);
+    gap: 8px;
+  }
+  .pl-row:last-child { border-bottom: none; }
+  .pl-row.total { font-weight: 700; font-size: 14px; }
+  .pl-row.indent { padding-left: 16px; color: var(--ink2); font-size: 12px; }
+  .pl-row.bigline { font-size: 15px; padding: 10px 0; }
+  .pl-right { display: flex; align-items: baseline; gap: 8px; font-family: var(--mono); white-space: nowrap; }
+  .pl-pct { font-size: 11px; color: var(--ink3); min-width: 42px; text-align: right; }
+
+  /* Bar */
+  .bar-wrap { margin-bottom: 14px; }
+  .bar-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 5px; }
+  .bar-name { font-size: 13px; color: var(--ink2); }
+  .bar-val { font-size: 12px; font-family: var(--mono); font-weight: 500; color: var(--ink); }
+  .bar-track { height: 8px; background: var(--surface); border-radius: 4px; overflow: hidden; border: 1px solid var(--border); }
+  .bar-fill { height: 100%; border-radius: 4px; transition: width 0.4s cubic-bezier(.4,0,.2,1); }
+  .bar-target { display: flex; align-items: center; gap: 6px; margin-top: 5px; }
+  .bar-hint { font-size: 11px; color: var(--ink3); }
+
+  /* Badge */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 9px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+  .badge.ok { background: var(--green-bg); color: var(--green); }
+  .badge.warn { background: var(--amber-bg); color: var(--amber); }
+  .badge.bad { background: var(--red-bg); color: var(--red); }
+
+  /* Mini grid for 2 columns */
+  .g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+
+  /* Divider */
+  .div { border: none; border-top: 1px dashed var(--border); margin: 2px 0; }
+
+  /* Result highlight */
+  .result-box {
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-top: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .result-box.ok { background: var(--green-bg); }
+  .result-box.warn { background: var(--amber-bg); }
+  .result-box.bad { background: var(--red-bg); }
+  .result-label { font-size: 13px; font-weight: 500; }
+  .result-val { font-size: 22px; font-weight: 700; font-family: var(--mono); }
+  .result-box.ok .result-label, .result-box.ok .result-val { color: var(--green); }
+  .result-box.warn .result-label, .result-box.warn .result-val { color: var(--amber); }
+  .result-box.bad .result-label, .result-box.bad .result-val { color: var(--red); }
+
+  /* Tag strip */
+  .event-tag {
+    display: inline-block;
+    background: var(--accent-bg);
+    color: var(--accent);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 9px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    letter-spacing: 0.05em;
   }
 
-  .action-card {
-    border-radius: var(--radius);
-    padding: 18px 16px 14px;
-    transition: transform 0.18s ease, box-shadow 0.18s ease;
-  }
-  .action-card:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(0,0,0,0.3); }
+  /* Scroll area hint */
+  .scroll-hint { font-size: 11px; color: var(--ink3); text-align: center; padding: 6px 0 0; }
 
-  .card-high { background: linear-gradient(145deg, #0d3d2e, #1a5c41); }
-  .card-mid  { background: linear-gradient(145deg, #1e1650, #2e2470); }
-  .card-cat  { background: linear-gradient(145deg, #4a2000, #7a3810); }
+  /* 2-col card grid for input */
+  .col2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 480px) { .col2 { grid-template-columns: 1fr; } }
 
-  .card-icon { font-size: 24px; margin-bottom: 10px; display: block; }
   .card-title {
-    font-family: 'DM Serif Display', serif;
-    font-size: 15px; font-weight: 400; color: #fff;
-    margin-bottom: 5px; line-height: 1.3;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink3);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
   }
-  .card-desc { font-size: 11px; color: rgba(255,255,255,0.5); margin-bottom: 14px; line-height: 1.5; }
-
-  .task-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
-  .task-item { display: flex; align-items: flex-start; gap: 9px; cursor: pointer; }
-
-  .task-cb {
-    appearance: none; -webkit-appearance: none;
-    width: 16px; height: 16px; min-width: 16px;
-    border: 1.5px solid rgba(255,255,255,0.3);
-    border-radius: 4px; margin-top: 1px; cursor: pointer;
-    position: relative; transition: background 0.15s, border-color 0.15s;
+  .card-title::before {
+    content: '';
+    display: inline-block;
+    width: 3px;
+    height: 12px;
+    border-radius: 2px;
+    background: var(--ink);
   }
-  .task-cb:checked { background: rgba(255,255,255,0.9); border-color: rgba(255,255,255,0.9); }
-  .task-cb:checked::after {
-    content: ''; position: absolute;
-    left: 3.5px; top: 1px; width: 5px; height: 9px;
-    border: 2px solid #1a1a1a; border-top: none; border-left: none;
-    transform: rotate(45deg);
-  }
-
-  .task-label { font-size: 12px; color: rgba(255,255,255,0.75); line-height: 1.45; cursor: pointer; transition: color 0.15s; }
-  .task-item input:checked + .task-label { color: rgba(255,255,255,0.28); text-decoration: line-through; }
-
-  .card-progress { margin-top: 14px; display: flex; align-items: center; gap: 8px; }
-  .progress-bar-bg { flex: 1; height: 3px; background: rgba(255,255,255,0.12); border-radius: 99px; overflow: hidden; }
-  .progress-bar-fill { height: 100%; background: rgba(255,255,255,0.6); border-radius: 99px; transition: width 0.3s ease; }
-  .progress-pct { font-size: 10px; color: rgba(255,255,255,0.38); min-width: 26px; text-align: right; }
+  .card-title.web::before { background: var(--accent); }
+  .card-title.goods::before { background: var(--green); }
+  .card-title.common::before { background: var(--ink3); }
 </style>
-</head>
-<body>
 
-<h1 class="page-title">収支 <span>&</span> アクションプラン</h1>
+<div class="app">
+  <div class="header">
+    <div class="header-title">原価管理マスタ</div>
+    <div class="header-sub">WEBデザイン（フリーランス）＋ 猫グッズ販売（マルシェ）</div>
+  </div>
 
-<!-- Metrics -->
-<h2 class="section-heading">月間サマリー</h2>
-<div class="metrics-grid">
-  <div class="metric">
-    <div class="metric-label">月売上目標</div>
-    <div class="metric-value" id="m-sales">100万円</div>
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('input')">⚙ 入力設定</button>
+    <button class="tab" onclick="showTab('pl')">📊 損益計算書</button>
+    <button class="tab" onclick="showTab('web')">💻 WEB案件</button>
+    <button class="tab" onclick="showTab('goods')">🐱 猫グッズ</button>
   </div>
-  <div class="metric">
-    <div class="metric-label">月経費・税金</div>
-    <div class="metric-value" id="m-cost">35万円</div>
-    <div class="metric-sub" id="m-cost-sub">売上の35%想定</div>
-  </div>
-  <div class="metric">
-    <div class="metric-label">月手取り</div>
-    <div class="metric-value" id="m-take">65万円</div>
-  </div>
-  <div class="metric">
-    <div class="metric-label">月貯蓄額</div>
-    <div class="metric-value" id="m-save">50万円</div>
-    <div class="metric-sub" id="m-save-sub">手取りの77%</div>
-  </div>
-</div>
 
-<!-- Sliders -->
-<div class="sliders-block">
-  <div class="slider-row">
-    <span class="slider-label">月売上</span>
-    <input type="range" class="slider-input" min="50" max="200" value="100" step="5" id="sl-sales" oninput="recalc()">
-    <span class="slider-val" id="lbl-sales">100万円</span>
-  </div>
-  <div class="slider-row">
-    <span class="slider-label">経費率（税込）</span>
-    <input type="range" class="slider-input" min="30" max="70" value="35" step="1" id="sl-cost" oninput="recalc()">
-    <span class="slider-val" id="lbl-cost">35%</span>
-  </div>
-  <div class="slider-row">
-    <span class="slider-label">生活費</span>
-    <input type="range" class="slider-input" min="10" max="30" value="15" step="1" id="sl-life" oninput="recalc()">
-    <span class="slider-val" id="lbl-life">15万円</span>
-  </div>
-</div>
-
-<!-- Chart -->
-<h2 class="section-heading">貯蓄シミュレーション</h2>
-<div class="chart-wrap">
-  <div class="chart-canvas-wrap">
-    <canvas id="chart"></canvas>
-  </div>
-  <div class="chart-legend">
-    <span><span style="width:10px;height:10px;border-radius:2px;background:#1D9E75;display:inline-block"></span>累積貯蓄</span>
-    <span><span style="width:10px;height:3px;background:#D85A30;display:inline-block;margin-top:3px"></span>目標1,000万円</span>
-  </div>
-</div>
-<p class="reach-msg" id="reach-msg"></p>
-
-<!-- Action Plan -->
-<h2 class="section-heading">Action Plan</h2>
-<div class="action-cards">
-
-  <div class="action-card card-high">
-    <span class="card-icon">🏆</span>
-    <p class="card-title">高単価案件の獲得</p>
-    <p class="card-desc">HP制作など単価の高い案件を継続的に受注する</p>
-    <ul class="task-list" id="tasks-0">
-      <li class="task-item"><input type="checkbox" class="task-cb" onchange="updateProgress(0)"><label class="task-label">ランサーズでパッケージ販売</label></li>
-      <li class="task-item"><input type="checkbox" class="task-cb" onchange="updateProgress(0)"><label class="task-label">クライアントへの提案資料を作成</label></li>
-      <li class="task-item"><input type="checkbox" class="task-cb" onchange="updateProgress(0)"><label class="task-label">SNS・広告で発信</label></li>
-      <li class="task-item"><input type="checkbox" class="task-cb" onchange="updateProgress(0)"><label class="task-label">ポートフォリオ充実化</label></li>
-    </ul>
-    <div class="card-progress">
-      <div class="progress-bar-bg"><div class="progress-bar-fill" id="prog-0" style="width:0%"></div></div>
-      <span class="progress-pct" id="pct-0">0%</span>
+  <!-- 入力 -->
+  <div id="tab-input" class="panel active">
+    <div class="slabel">共通設定（月次）</div>
+    <div class="card">
+      <div class="card-title common">自分の労働コスト</div>
+      <div class="irow"><label>時給（想定）</label><input type="number" id="jikyu" value="2500" oninput="calc()"><span class="unit">円/h</span></div>
+      <div class="irow"><label>月間稼働時間</label><input type="number" id="hours" value="160" oninput="calc()"><span class="unit">h</span></div>
+      <div class="irow"><label>厚生・福利費（月）</label><input type="number" id="fukuri" value="15000" oninput="calc()"><span class="unit">円</span></div>
     </div>
-  </div>
 
-  <div class="action-card card-mid">
-    <span class="card-icon">⚡</span>
-    <p class="card-title">LP・HPのフォーマット販売</p>
-    <p class="card-desc">テンプレート化で工数削減→案件数を増やす</p>
-    <ul class="task-list" id="tasks-1">
-      <li class="task-item"><input type="checkbox" class="task-cb" onchange="updateProgress(1)"><label class="task-label">AIでテンプレート量産</label></li>
-      <li class="task-item"><input type="checkbox" class="task-cb" onchange="updateProgress(1)"><label class="task-label">通常より低コストで販売</label></li>
-      <li class="task-item"><input type="checkbox" class="task-cb" onchange="updateProgress(1)"><label class="task-label">可能ならRMSでパッケージ化</label></li>
-      <li class="task-item"><input type="checkbox" class="task-cb" onchange="updateProgress(1)"><label class="task-label">料金表を整える</label></li>
-    </ul>
-    <div class="card-progress">
-      <div class="progress-bar-bg"><div class="progress-bar-fill" id="prog-1" style="width:0%"></div></div>
-      <span class="progress-pct" id="pct-1">0%</span>
+    <div class="slabel">事業別入力</div>
+    <div class="col2">
+      <div class="card">
+        <div class="card-title web">WEBデザイン</div>
+        <div class="irow"><label>月間売上</label><input type="number" id="web-uriage" value="300000" oninput="calc()"><span class="unit">円</span></div>
+        <div class="irow"><label>時間の割合</label><input type="number" id="web-pct" value="60" oninput="calc()"><span class="unit">%</span></div>
+        <div class="irow"><label>ツール費</label><input type="number" id="web-tool" value="5000" oninput="calc()"><span class="unit">円</span></div>
+        <div class="irow"><label>広告宣伝費</label><input type="number" id="web-ad" value="10000" oninput="calc()"><span class="unit">円</span></div>
+        <div class="irow"><label>雑費</label><input type="number" id="web-misc" value="5000" oninput="calc()"><span class="unit">円</span></div>
+      </div>
+      <div class="card">
+        <div class="card-title goods">猫グッズ（マルシェ）</div>
+        <div class="irow"><label>月間売上</label><input type="number" id="goods-uriage" value="100000" oninput="calc()"><span class="unit">円</span></div>
+        <div class="irow"><label>時間の割合</label><input type="number" id="goods-pct" value="40" oninput="calc()"><span class="unit">%</span></div>
+        <div class="irow"><label>材料費</label><input type="number" id="goods-zairyo" value="20000" oninput="calc()"><span class="unit">円</span></div>
+        <div class="irow"><label>販売手数料</label><input type="number" id="goods-fee" value="11" oninput="calc()"><span class="unit">%</span></div>
+        <div class="irow"><label>配送料</label><input type="number" id="goods-haisou" value="5000" oninput="calc()"><span class="unit">円</span></div>
+        <div class="irow"><label>広告費</label><input type="number" id="goods-ad" value="5000" oninput="calc()"><span class="unit">円</span></div>
+        <div class="irow"><label>修繕費・雑費</label><input type="number" id="goods-misc" value="3000" oninput="calc()"><span class="unit">円</span></div>
+        <div class="irow"><label>減価償却（月割）</label><input type="number" id="goods-dep" value="2000" oninput="calc()"><span class="unit">円</span></div>
+      </div>
     </div>
+    <div class="scroll-hint">↑ 数値を変えると損益計算書・各原価タブに即時反映されます</div>
   </div>
 
-  <div class="action-card card-cat">
-    <span class="card-icon">🐱</span>
-    <p class="card-title">猫雑貨のマルシェ出店</p>
-    <p class="card-desc">ハンドメイド・猫雑貨でリアルイベントに出店</p>
-    <ul class="task-list" id="tasks-2">
-      <li class="task-item"><input type="checkbox" class="task-cb" onchange="updateProgress(2)"><label class="task-label">出店できるマルシェ・イベントを調査</label></li>
-      <li class="task-item"><input type="checkbox" class="task-cb" onchange="updateProgress(2)"><label class="task-label">販売商品ラインナップを決定</label></li>
-      <li class="task-item"><input type="checkbox" class="task-cb" onchange="updateProgress(2)"><label class="task-label">ディスプレイ・什器を準備</label></li>
-      <li class="task-item"><input type="checkbox" class="task-cb" onchange="updateProgress(2)"><label class="task-label">食品販売も視野にいれる</label></li>
-    </ul>
-    <div class="card-progress">
-      <div class="progress-bar-bg"><div class="progress-bar-fill" id="prog-2" style="width:0%"></div></div>
-      <span class="progress-pct" id="pct-2">0%</span>
+  <!-- 損益 -->
+  <div id="tab-pl" class="panel">
+    <div class="slabel">月次サマリー</div>
+    <div class="mgrid" id="summary-cards"></div>
+
+    <div class="slabel">原価率チェック</div>
+    <div class="card" id="cost-check"></div>
+
+    <div class="slabel">月次損益計算書</div>
+    <div class="card" id="pl-table"></div>
+  </div>
+
+  <!-- WEB案件 -->
+  <div id="tab-web" class="panel">
+    <div class="slabel">1案件あたり原価計算</div>
+    <div class="card">
+      <div class="card-title web">案件情報</div>
+      <div class="irow"><label>見積もり金額</label><input type="number" id="proj-price" value="150000" oninput="calcProj()"><span class="unit">円</span></div>
+      <div class="irow"><label>作業時間（予定）</label><input type="number" id="proj-hours" value="40" oninput="calcProj()"><span class="unit">h</span></div>
+      <div class="irow"><label>外注費</label><input type="number" id="proj-outsource" value="0" oninput="calcProj()"><span class="unit">円</span></div>
     </div>
+    <div id="proj-result"></div>
   </div>
 
+  <!-- 猫グッズ -->
+  <div id="tab-goods" class="panel">
+    <div class="slabel">1商品あたり原価計算</div>
+    <div class="card">
+      <div class="card-title goods">商品情報</div>
+      <div class="irow"><label>販売価格</label><input type="number" id="item-price" value="1500" oninput="calcItem()"><span class="unit">円</span></div>
+      <div class="irow"><label>材料費（1個）</label><input type="number" id="item-zairyo" value="300" oninput="calcItem()"><span class="unit">円</span></div>
+      <div class="irow"><label>制作時間（1個）</label><input type="number" id="item-hours" value="0.5" step="0.1" oninput="calcItem()"><span class="unit">h</span></div>
+      <div class="irow"><label>マルシェ手数料率</label><input type="number" id="item-fee" value="11" oninput="calcItem()"><span class="unit">%</span></div>
+      <div class="irow"><label>配送費（1個）</label><input type="number" id="item-haisou" value="500" oninput="calcItem()"><span class="unit">円</span></div>
+    </div>
+    <div id="item-result"></div>
+  </div>
 </div>
 
 <script>
-let myChart = null;
-
-function recalc() {
-  const sales = parseInt(document.getElementById('sl-sales').value);
-  const costRate = parseInt(document.getElementById('sl-cost').value) / 100;
-  const life = parseInt(document.getElementById('sl-life').value);
-
-  document.getElementById('lbl-sales').textContent = sales + '万円';
-  document.getElementById('lbl-cost').textContent = (costRate * 100).toFixed(0) + '%';
-  document.getElementById('lbl-life').textContent = life + '万円';
-
-  const cost = Math.round(sales * costRate);
-  const take = sales - cost;
-  const save = take - life;
-
-  document.getElementById('m-sales').textContent = sales + '万円';
-  document.getElementById('m-cost').textContent = cost + '万円';
-  document.getElementById('m-cost-sub').textContent = '売上の' + (costRate * 100).toFixed(0) + '%想定';
-  document.getElementById('m-take').textContent = take + '万円';
-  document.getElementById('m-save').textContent = save + '万円';
-  document.getElementById('m-save-sub').textContent = take > 0 ? '手取りの' + Math.round(save / take * 100) + '%' : '';
-
-  const labels = [], data = [];
-  const months = 36, goal = 1000;
-  let reachMonth = null;
-
-  for (let m = 1; m <= months; m++) {
-    const yr = Math.ceil(m / 12);
-    const mo = m % 12 === 0 ? 12 : m % 12;
-    labels.push(yr + '年' + mo + 'M');
-    const cum = save * m;
-    data.push(cum);
-    if (cum >= goal && reachMonth === null) reachMonth = m;
-  }
-
-  const msg = reachMonth
-    ? reachMonth + 'ヶ月目（' + Math.ceil(reachMonth / 12) + '年' + (reachMonth % 12 === 0 ? 12 : reachMonth % 12) + 'ヶ月後）に1,000万円達成見込み 🎉'
-    : '3年間では1,000万円に届かない試算です。売上アップか経費削減を検討しましょう。';
-  document.getElementById('reach-msg').textContent = msg;
-
-  const tealColor = '#1D9E75', coralColor = '#D85A30';
-  const bgColors = data.map(v => v >= goal ? '#0F6E56' : tealColor);
-
-  if (myChart) {
-    myChart.data.labels = labels;
-    myChart.data.datasets[0].data = data;
-    myChart.data.datasets[0].backgroundColor = bgColors;
-    myChart.data.datasets[1].data = Array(months).fill(goal);
-    myChart.update();
-  } else {
-    myChart = new Chart(document.getElementById('chart'), {
-      type: 'bar',
-      data: {
-        labels,
-        datasets: [
-          { label: '累積貯蓄（万円）', data, backgroundColor: bgColors, borderRadius: 2, borderSkipped: false },
-          { label: 'goal-line', type: 'line', data: Array(months).fill(goal), borderColor: coralColor, borderWidth: 1.5, borderDash: [5, 4], pointRadius: 0, fill: false }
-        ]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { display: false },
-          tooltip: { callbacks: { label: ctx => '累積: ' + ctx.parsed.y + '万円' } }
-        },
-        scales: {
-          x: { ticks: { maxTicksLimit: 12, font: { size: 10 }, color: '#666' }, grid: { display: false } },
-          y: { ticks: { font: { size: 11 }, color: '#666', callback: v => v + '万' }, grid: { color: 'rgba(255,255,255,0.06)' } }
-        }
-      }
-    });
-  }
+function showTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  const tabs = ['input','pl','web','goods'];
+  document.querySelectorAll('.tab')[tabs.indexOf(name)].classList.add('active');
+  document.getElementById('tab-'+name).classList.add('active');
+  if(name==='pl') renderPL();
+  if(name==='web') calcProj();
+  if(name==='goods') calcItem();
 }
 
-function updateProgress(i) {
-  const tasks = document.getElementById('tasks-' + i);
-  const all = tasks.querySelectorAll('.task-cb');
-  const checked = tasks.querySelectorAll('.task-cb:checked');
-  const pct = Math.round(checked.length / all.length * 100);
-  document.getElementById('prog-' + i).style.width = pct + '%';
-  document.getElementById('pct-' + i).textContent = pct + '%';
+function v(id){ return parseFloat(document.getElementById(id)?.value)||0; }
+function yen(n){ return '¥'+Math.round(n).toLocaleString(); }
+function pct(n,d){ return d===0?'—':(n/d*100).toFixed(1)+'%'; }
+function colorCls(val, target){ return val>=target?'ok': val>=target*0.9?'warn':'bad'; }
+
+function getData(){
+  const jikyu=v('jikyu'), hours=v('hours'), fukuri=v('fukuri');
+  const totalJinken = jikyu*hours + fukuri;
+  const webPctR=v('web-pct')/100, goodsPctR=v('goods-pct')/100;
+  const webU=v('web-uriage'), goodsU=v('goods-uriage');
+  const totalU=webU+goodsU;
+  const webJinken=totalJinken*webPctR, goodsJinken=totalJinken*goodsPctR;
+  const goodsZairyo=v('goods-zairyo');
+  const webTool=v('web-tool');
+  const webGenka=webJinken+webTool;
+  const goodsGenka=goodsJinken+goodsZairyo;
+  const totalGenka=webGenka+goodsGenka;
+  const webSo=webU-webGenka, goodsSo=goodsU-goodsGenka;
+  const totalSo=webSo+goodsSo;
+  const goodsFeeAmt=goodsU*v('goods-fee')/100;
+  const webHanpan=v('web-ad');
+  const goodsHanpan=goodsFeeAmt+v('goods-haisou')+v('goods-ad');
+  const webMisc=v('web-misc'), goodsMisc=v('goods-misc')+v('goods-dep');
+  const totalHanpan=webHanpan+goodsHanpan;
+  const totalMisc=webMisc+goodsMisc;
+  const eigyo=totalSo-totalHanpan-totalMisc;
+  return {totalU,totalJinken,goodsZairyo,webTool,totalGenka,webGenka,goodsGenka,
+    totalSo,webSo,goodsSo,goodsFeeAmt,webHanpan,goodsHanpan,
+    webMisc,goodsMisc,totalHanpan,totalMisc,eigyo,
+    webU,goodsU,webJinken,goodsJinken};
 }
 
-recalc();
+function calc(){
+  const d=getData();
+  const soRitsu=d.totalU?d.totalSo/d.totalU*100:0;
+  const eigyoRitsu=d.totalU?d.eigyo/d.totalU*100:0;
+  const scEl=document.getElementById('summary-cards');
+  if(scEl) renderSummary(d,soRitsu,eigyoRitsu);
+  const plEl=document.getElementById('pl-table');
+  if(plEl) renderPL();
+  const ccEl=document.getElementById('cost-check');
+  if(ccEl) renderCostCheck(d);
+}
+
+function renderSummary(d,soRitsu,eigyoRitsu){
+  const sc=document.getElementById('summary-cards');
+  sc.innerHTML=`
+    <div class="mcard">
+      <div class="mcard-label">月間売上合計</div>
+      <div class="mcard-val">${yen(d.totalU)}</div>
+    </div>
+    <div class="mcard">
+      <div class="mcard-label">粗利益</div>
+      <div class="mcard-val ${colorCls(soRitsu,47)}">${yen(d.totalSo)}</div>
+      <div class="mcard-sub">粗利率 ${soRitsu.toFixed(1)}%</div>
+    </div>
+    <div class="mcard">
+      <div class="mcard-label">営業利益</div>
+      <div class="mcard-val ${d.eigyo>=0?'ok':'bad'}">${yen(d.eigyo)}</div>
+      <div class="mcard-sub">利益率 ${eigyoRitsu.toFixed(1)}%</div>
+    </div>
+    <div class="mcard">
+      <div class="mcard-label">人件費（自分）</div>
+      <div class="mcard-val">${yen(d.totalJinken)}</div>
+      <div class="mcard-sub">${pct(d.totalJinken,d.totalU)}</div>
+    </div>
+  `;
+}
+
+function renderCostCheck(d){
+  const jinmat=d.totalJinken+d.goodsZairyo;
+  const jp=d.totalU?jinmat/d.totalU*100:0;
+  const sp=d.totalU?d.totalSo/d.totalU*100:0;
+  const jColor=jp<=53?'#2d7a4f':jp<=60?'#a05c00':'#c0392b';
+  const sColor=sp>=47?'#2d7a4f':'#a05c00';
+  const badgeCls=jp<=53?'ok':jp<=60?'warn':'bad';
+  const badgeText=jp<=53?'目標達成':'超過';
+  document.getElementById('cost-check').innerHTML=`
+    <div class="bar-wrap">
+      <div class="bar-head">
+        <span class="bar-name">人件費 ＋ 材料費　<span class="badge ${badgeCls}">${badgeText}</span></span>
+        <span class="bar-val">${jp.toFixed(1)}%（目標 ≦ 53%）</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill" style="width:${Math.min(jp,100)}%;background:${jColor}"></div></div>
+    </div>
+    <div class="bar-wrap" style="margin-top:12px">
+      <div class="bar-head">
+        <span class="bar-name">粗利益率</span>
+        <span class="bar-val">${sp.toFixed(1)}%（目標 ≧ 47%）</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill" style="width:${Math.min(sp,100)}%;background:${sColor}"></div></div>
+    </div>
+  `;
+}
+
+function renderPL(){
+  const d=getData();
+  const soRitsu=d.totalU?d.totalSo/d.totalU*100:0;
+  const eigyoRitsu=d.totalU?d.eigyo/d.totalU*100:0;
+  const soColor=soRitsu>=47?'var(--green)':'var(--amber)';
+  const eigyoColor=d.eigyo>=0?'var(--green)':'var(--red)';
+  renderSummary(d,soRitsu,eigyoRitsu);
+  renderCostCheck(d);
+  document.getElementById('pl-table').innerHTML=`
+    <div class="pl-row total bigline">
+      <span>売上高</span>
+      <div class="pl-right"><span>${yen(d.totalU)}</span><span class="pl-pct">100%</span></div>
+    </div>
+    <div class="pl-row indent"><span>WEBデザイン</span><span>${yen(d.webU)}</span></div>
+    <div class="pl-row indent"><span>猫グッズ</span><span>${yen(d.goodsU)}</span></div>
+    <hr class="div">
+    <div class="pl-row total">
+      <span>原価合計</span>
+      <div class="pl-right"><span>${yen(d.totalGenka)}</span><span class="pl-pct">${pct(d.totalGenka,d.totalU)}</span></div>
+    </div>
+    <div class="pl-row indent"><span>人件費（自分・厚生含）</span><span>${yen(d.totalJinken)}</span></div>
+    <div class="pl-row indent"><span>材料費</span><span>${yen(d.goodsZairyo)}</span></div>
+    <div class="pl-row indent"><span>ツール費</span><span>${yen(d.webTool)}</span></div>
+    <hr class="div">
+    <div class="pl-row total bigline" style="color:${soColor}">
+      <span>粗利益</span>
+      <div class="pl-right"><span>${yen(d.totalSo)}</span><span class="pl-pct" style="color:${soColor}">${soRitsu.toFixed(1)}%</span></div>
+    </div>
+    <hr class="div">
+    <div class="pl-row total">
+      <span>販売費・一般管理費</span>
+      <div class="pl-right"><span>${yen(d.totalHanpan+d.totalMisc)}</span><span class="pl-pct">${pct(d.totalHanpan+d.totalMisc,d.totalU)}</span></div>
+    </div>
+    <div class="pl-row indent"><span>販売手数料（マルシェ）</span><span>${yen(d.goodsFeeAmt)}</span></div>
+    <div class="pl-row indent"><span>広告宣伝費</span><span>${yen(d.webHanpan+v('goods-ad'))}</span></div>
+    <div class="pl-row indent"><span>配送料</span><span>${yen(v('goods-haisou'))}</span></div>
+    <div class="pl-row indent"><span>雑費・修繕費</span><span>${yen(d.webMisc+v('goods-misc'))}</span></div>
+    <div class="pl-row indent"><span>減価償却</span><span>${yen(v('goods-dep'))}</span></div>
+    <hr class="div">
+    <div class="pl-row total bigline" style="color:${eigyoColor}">
+      <span>営業利益</span>
+      <div class="pl-right"><span>${yen(d.eigyo)}</span><span class="pl-pct" style="color:${eigyoColor}">${eigyoRitsu.toFixed(1)}%</span></div>
+    </div>
+  `;
+}
+
+function calcProj(){
+  const price=v('proj-price'), phours=v('proj-hours'), outsource=v('proj-outsource');
+  const jikyu=v('jikyu'), fukuri=v('fukuri'), totalHours=v('hours');
+  const hRate=jikyu+(totalHours>0?fukuri/totalHours:0);
+  const jinken=hRate*phours;
+  const genka=jinken+outsource;
+  const soUri=price-genka;
+  const hanpan=price*0.10;
+  const eigyo=price-genka-hanpan-v('web-misc');
+  const soR=price?soUri/price*100:0;
+  const eigyoR=price?eigyo/price*100:0;
+  const soBox=soR>=47?'ok':soR>=30?'warn':'bad';
+  const eigBox=eigyo>=0?'ok':'bad';
+  document.getElementById('proj-result').innerHTML=`
+    <div class="card" style="margin-bottom:12px">
+      <div class="card-title web">原価明細</div>
+      <div class="pl-row total"><span>見積もり金額</span><div class="pl-right"><span>${yen(price)}</span><span class="pl-pct">100%</span></div></div>
+      <div class="pl-row indent"><span>人件費（${phours}h × ¥${Math.round(hRate).toLocaleString()}）</span><span>${yen(jinken)}</span></div>
+      <div class="pl-row indent"><span>外注費</span><span>${yen(outsource)}</span></div>
+      <hr class="div">
+      <div class="pl-row total"><span>製造原価</span><div class="pl-right"><span>${yen(genka)}</span><span class="pl-pct">${pct(genka,price)}</span></div></div>
+    </div>
+    <div class="g2">
+      <div class="result-box ${soBox}">
+        <div>
+          <div class="result-label">案件粗利</div>
+          <div style="font-size:11px;opacity:0.8;margin-top:1px">${soR.toFixed(1)}%</div>
+        </div>
+        <div class="result-val">${yen(soUri)}</div>
+      </div>
+      <div class="result-box ${eigBox}">
+        <div>
+          <div class="result-label">営業利益（概算）</div>
+          <div style="font-size:11px;opacity:0.8;margin-top:1px">${eigyoR.toFixed(1)}%</div>
+        </div>
+        <div class="result-val">${yen(eigyo)}</div>
+      </div>
+    </div>
+    <div style="font-size:11px;color:var(--ink3);margin-top:8px">※ 実際の時給（厚生費込）= ¥${Math.round(hRate).toLocaleString()}/h</div>
+  `;
+}
+
+function calcItem(){
+  const price=v('item-price'), zairyo=v('item-zairyo'), ihours=v('item-hours');
+  const fee=v('item-fee'), haisou=v('item-haisou');
+  const jikyu=v('jikyu'), fukuri=v('fukuri'), totalHours=v('hours');
+  const hRate=jikyu+(totalHours>0?fukuri/totalHours:0);
+  const jinken=hRate*ihours;
+  const genka=jinken+zairyo;
+  const feeAmt=price*fee/100;
+  const soUri=price-genka;
+  const net=price-genka-feeAmt-haisou;
+  const soR=price?soUri/price*100:0;
+  const netR=price?net/price*100:0;
+  const bep=(1-fee/100)>0?(genka+haisou)/(1-fee/100):0;
+  const soBox=soR>=47?'ok':soR>=30?'warn':'bad';
+  const netBox=net>=0?'ok':'bad';
+  document.getElementById('item-result').innerHTML=`
+    <div class="card" style="margin-bottom:12px">
+      <div class="card-title goods">原価明細</div>
+      <div class="pl-row total"><span>販売価格</span><div class="pl-right"><span>${yen(price)}</span><span class="pl-pct">100%</span></div></div>
+      <div class="pl-row indent"><span>材料費</span><div class="pl-right"><span>${yen(zairyo)}</span><span class="pl-pct">${pct(zairyo,price)}</span></div></div>
+      <div class="pl-row indent"><span>人件費（${ihours}h × ¥${Math.round(hRate).toLocaleString()}）</span><div class="pl-right"><span>${yen(jinken)}</span><span class="pl-pct">${pct(jinken,price)}</span></div></div>
+      <hr class="div">
+      <div class="pl-row total"><span>製造原価</span><div class="pl-right"><span>${yen(genka)}</span><span class="pl-pct">${pct(genka,price)}</span></div></div>
+      <div class="pl-row indent"><span>マルシェ手数料（${fee}%）</span><span>▲ ${yen(feeAmt)}</span></div>
+      <div class="pl-row indent"><span>配送費</span><span>▲ ${yen(haisou)}</span></div>
+    </div>
+    <div class="g2">
+      <div class="result-box ${soBox}">
+        <div>
+          <div class="result-label">粗利</div>
+          <div style="font-size:11px;opacity:0.8;margin-top:1px">${soR.toFixed(1)}%</div>
+        </div>
+        <div class="result-val">${yen(soUri)}</div>
+      </div>
+      <div class="result-box ${netBox}">
+        <div>
+          <div class="result-label">手取り利益</div>
+          <div style="font-size:11px;opacity:0.8;margin-top:1px">${netR.toFixed(1)}%</div>
+        </div>
+        <div class="result-val">${yen(net)}</div>
+      </div>
+    </div>
+    <div class="g2" style="margin-top:10px">
+      <div class="mcard">
+        <div class="mcard-label">損益分岐 販売価格</div>
+        <div class="mcard-val" style="font-size:17px">${yen(bep)}</div>
+        <div class="mcard-sub">この値段以上なら黒字</div>
+      </div>
+      <div class="mcard">
+        <div class="mcard-label">この商品の実質時給</div>
+        <div class="mcard-val" style="font-size:17px">${ihours>0?yen(net/ihours)+'/h':'—'}</div>
+      </div>
+    </div>
+  `;
+}
+
+calc(); calcProj(); calcItem();
 </script>
-</body>
-</html>
