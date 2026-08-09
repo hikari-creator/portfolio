@@ -1,619 +1,675 @@
-
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>猫と暮らし、保護猫を救える環境づくり｜中長期計画</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;600;700&family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap');
+:root{
+  --bg:#f7fafc;
+  --card:#ffffff;
+  --text:#20374d;
+  --muted:#7c8ea0;
+  --line:#e2ecf3;
+  --accent:#e699ac;
+  --accent-soft:#fbe3e5;
+  --navy:#387bbc;
+  --navy-soft:#e5f0fa;
+  --ok:#2f6690;
+  --ok-soft:#e5f0fa;
+  --warn:#b8763f;
+  --warn-soft:#fdf0e2;
+  --ring-track:#e9eff5;
+  --dur:.5s;
+}
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:.001ms!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:"Noto Sans JP",-apple-system,BlinkMacSystemFont,sans-serif;
+  font-size:14px;line-height:1.7;letter-spacing:.01em;
+}
+.serif{font-family:"Shippori Mincho",serif}
+header{background:var(--bg);color:var(--text);padding:52px 24px 36px;border-bottom:1px solid var(--line);position:relative;overflow:hidden}
+header::before{
+  content:"";position:absolute;top:-60px;right:-60px;width:220px;height:220px;border-radius:50%;
+  background:radial-gradient(circle,var(--accent-soft) 0%,transparent 70%);pointer-events:none;
+}
+header::after{
+  content:"";position:absolute;bottom:-70px;left:-40px;width:200px;height:200px;border-radius:50%;
+  background:radial-gradient(circle,var(--navy-soft) 0%,transparent 70%);pointer-events:none;
+}
+.wrap{max-width:1080px;margin:auto;position:relative}
+header .eyebrow{color:var(--accent);letter-spacing:.18em;font-size:10px;font-weight:600;opacity:0;animation:riseIn .6s ease forwards}
+h1{font-size:27px;line-height:1.4;margin:10px 0 10px;letter-spacing:.03em;font-weight:600;opacity:0;animation:riseIn .6s .08s ease forwards}
+.sub{color:var(--muted);max-width:720px;font-size:13px;opacity:0;animation:riseIn .6s .16s ease forwards}
+.headrow{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-top:18px;opacity:0;animation:riseIn .6s .24s ease forwards}
+.badge{background:var(--navy-soft);color:var(--navy);border-radius:99px;padding:6px 14px;font-size:11.5px;font-weight:600;white-space:nowrap}
+.badge.ghost{background:transparent;border:1px solid var(--line);color:var(--muted);font-weight:500}
+@keyframes riseIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
-  :root {
-    --ink: #1a1a18;
-    --ink2: #4a4a44;
-    --ink3: #8a8a80;
-    --paper: #fafaf7;
-    --surface: #f2f2ee;
-    --border: #e0e0d8;
-    --green: #2d7a4f;
-    --green-bg: #e8f5ee;
-    --amber: #a05c00;
-    --amber-bg: #fef3e2;
-    --red: #c0392b;
-    --red-bg: #fdecea;
-    --accent: #2d5a8e;
-    --accent-bg: #eaf0f8;
-    --mono: 'DM Mono', monospace;
-    --sans: 'Noto Sans JP', sans-serif;
-  }
+nav{position:sticky;top:0;z-index:20;background:rgba(248,248,246,.92);border-bottom:1px solid var(--line);backdrop-filter:blur(12px)}
+.navin{max-width:1080px;margin:auto;display:flex;gap:2px;overflow:auto;padding:8px 12px;position:relative}
+nav button{border:0;background:transparent;padding:9px 14px;border-radius:7px;cursor:pointer;color:var(--muted);white-space:nowrap;font:inherit;font-size:12.5px;position:relative;z-index:2;transition:color .25s}
+nav button.active{color:#fff;font-weight:600}
+nav button:not(.active):hover{color:var(--navy)}
+.nav-pill{position:absolute;top:8px;bottom:8px;left:0;width:0;background:var(--navy);border-radius:7px;transition:left .32s cubic-bezier(.22,1,.36,1),width .32s cubic-bezier(.22,1,.36,1);z-index:1}
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+main{padding:32px 16px 72px}
+.page{display:none}
+.page.active{display:block;animation:pageIn .38s cubic-bezier(.22,1,.36,1)}
+@keyframes pageIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 
-  .app {
-    font-family: var(--sans);
-    background: var(--paper);
-    color: var(--ink);
-    min-height: 600px;
-    padding: 0 0 40px;
-  }
+h2{font-size:18px;font-weight:600;margin:0 0 16px;letter-spacing:.03em}
+h3{font-size:14px;font-weight:600;margin:0 0 8px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.grid.cols-4{grid-template-columns:repeat(4,1fr)}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:11px;padding:20px;
+  box-shadow:0 1px 2px rgba(30,25,20,.02);transition:box-shadow .25s, transform .25s;
+}
+.card.hoverable:hover{box-shadow:0 8px 22px rgba(30,25,20,.06);transform:translateY(-2px)}
+.card.today{border-color:var(--accent);background:linear-gradient(180deg,var(--accent-soft) 0%, #fff 120px)}
+.stagger{opacity:0;transform:translateY(10px);animation:riseIn .5s ease forwards}
+.metric{font-size:26px;line-height:1.25;font-weight:600;margin:5px 0 8px;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+.muted{color:var(--muted);font-size:12px}
+.progress{height:6px;background:#ecebe7;border-radius:99px;overflow:hidden;margin:14px 0 8px}
+.bar{height:100%;width:0;background:var(--accent);transition:width 1s cubic-bezier(.22,1,.36,1)}
+.bar.navy{background:var(--navy)}
 
-  /* Header */
-  .header {
-    background: var(--ink);
-    color: #fff;
-    padding: 20px 24px 18px;
-    position: relative;
-    overflow: hidden;
-  }
-  .header::after {
-    content: '¥';
-    position: absolute;
-    right: 20px;
-    top: -10px;
-    font-size: 80px;
-    font-family: var(--mono);
-    font-weight: 500;
-    opacity: 0.07;
-    line-height: 1;
-  }
-  .header-title {
-    font-size: 18px;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    margin-bottom: 3px;
-  }
-  .header-sub {
-    font-size: 12px;
-    opacity: 0.55;
-    letter-spacing: 0.05em;
-  }
+/* signature: circular goal ring */
+.ring-wrap{display:flex;align-items:center;gap:18px}
+.ring{position:relative;width:104px;height:104px;flex:none}
+.ring svg{transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:9}
+.ring .track{stroke:var(--ring-track)}
+.ring .fill{stroke:var(--accent);stroke-linecap:round;stroke-dasharray:301.6;stroke-dashoffset:301.6;transition:stroke-dashoffset 1.1s cubic-bezier(.22,1,.36,1)}
+.ring .pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:700;font-variant-numeric:tabular-nums}
 
-  /* Tabs */
-  .tabs {
-    display: grid;
-    grid-template-columns: repeat(4,1fr);
-    background: var(--ink);
-    border-top: 1px solid rgba(255,255,255,0.1);
-  }
-  .tab {
-    padding: 10px 6px;
-    background: none;
-    border: none;
-    color: rgba(255,255,255,0.45);
-    font-family: var(--sans);
-    font-size: 12px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.15s;
-    border-top: 2px solid transparent;
-    letter-spacing: 0.03em;
-    text-align: center;
-  }
-  .tab:hover { color: rgba(255,255,255,0.75); }
-  .tab.active {
-    color: #fff;
-    border-top-color: #fff;
-    background: rgba(255,255,255,0.06);
-  }
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+th,td{padding:13px 14px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left}
+th{background:#f3f2ef;font-size:11px;font-weight:600;color:var(--muted)}
+tr:last-child td{border-bottom:0}
+tr.current-row{background:var(--accent-soft)}
+.check{width:18px;height:18px;accent-color:var(--accent);cursor:pointer;vertical-align:middle;transition:transform .15s}
+.check:active{transform:scale(1.15)}
+.goal{display:flex;gap:10px;align-items:flex-start;margin:0}
+.goal label{cursor:pointer;flex:1;transition:color .3s}
+.goal.done label{text-decoration:line-through;color:#aaa}
 
-  /* Panels */
-  .panel { display: none; padding: 20px 20px 0; }
-  .panel.active { display: block; }
+input[type=number],input[type=text],textarea,select{
+  width:100%;border:1px solid var(--line);border-radius:6px;padding:9px 10px;background:#fff;color:var(--text);
+  font:inherit;outline:none;transition:border-color .2s, box-shadow .2s;
+}
+input:focus,textarea:focus,select:focus{border-color:var(--navy);box-shadow:0 0 0 3px var(--navy-soft)}
+textarea{min-height:90px;resize:vertical}
 
-  /* Section label */
-  .slabel {
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--ink3);
-    margin-bottom: 10px;
-    margin-top: 22px;
-  }
-  .slabel:first-child { margin-top: 0; }
+.months{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.month-card{background:var(--card);border:1px solid var(--line);border-radius:9px;padding:15px;transition:border-color .2s, box-shadow .2s}
+.month-card.current{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.month-card h3{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:6px}
+.small-check{display:flex;align-items:center;gap:8px;font-size:13px;margin:7px 0;cursor:pointer}
+.pill{display:inline-block;padding:2px 8px;border-radius:99px;background:var(--accent-soft);font-size:10px;color:var(--accent);font-weight:600}
+.pill.navy{background:var(--navy-soft);color:var(--navy)}
+.pill.warn{background:var(--warn-soft);color:var(--warn)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+button.primary,button.secondary,button.danger{border:0;border-radius:6px;padding:10px 15px;cursor:pointer;font:inherit;font-size:13px;transition:transform .15s,background .2s}
+button.primary:active,button.secondary:active,button.danger:active{transform:scale(.97)}
+.primary{background:var(--navy);color:#fff}.primary:hover{background:#1a2739}
+.secondary{background:#ecebe7;color:var(--text)}.secondary:hover{background:#e2e0da}
+.danger{background:#fbe9e6;color:#a3382a}.danger:hover{background:#f6d8d2}
+.note{background:#f5f4f1;border-left:2px solid var(--accent);padding:12px 14px;border-radius:4px;color:#55544e}
 
-  /* Card */
-  .card {
-    background: #fff;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 16px 18px;
-    margin-bottom: 14px;
-  }
+.big-goal-summary{display:grid;grid-template-columns:1fr;gap:8px}
+@media(min-width:760px){.big-goal-summary{grid-template-columns:repeat(3,1fr)}}
+.big-goal-summary .goal{border:1px solid var(--line);border-radius:10px;padding:16px;background:#fff;min-height:74px;transition:border-color .2s, background .2s}
+.big-goal-summary .goal.done{border-color:var(--navy);background:var(--navy-soft)}
+.big-goal-summary .goal label{font-size:13px;line-height:1.5}
 
-  /* Metric grid */
-  .mgrid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 14px;
-  }
-  .mcard {
-    background: var(--surface);
-    border-radius: 8px;
-    padding: 12px 14px;
-    border: 1px solid var(--border);
-  }
-  .mcard-label { font-size: 11px; color: var(--ink3); margin-bottom: 4px; letter-spacing: 0.04em; }
-  .mcard-val { font-size: 20px; font-weight: 700; font-family: var(--mono); color: var(--ink); line-height: 1.1; }
-  .mcard-sub { font-size: 11px; color: var(--ink3); margin-top: 3px; font-family: var(--mono); }
-  .mcard-val.ok { color: var(--green); }
-  .mcard-val.warn { color: var(--amber); }
-  .mcard-val.bad { color: var(--red); }
+.searchbar{margin-bottom:12px}
+.empty{color:var(--muted);font-size:13.5px;padding:20px;text-align:center}
+.divider{border:0;border-top:1px solid var(--line);margin:20px 0}
+.hint{font-size:11.5px;color:var(--muted);margin-top:5px}
+.field-label{display:block;color:var(--muted);font-size:12px;margin-bottom:5px}
 
-  /* Input row */
-  .irow {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 9px 0;
-    border-bottom: 1px solid var(--border);
-  }
-  .irow:last-child { border-bottom: none; padding-bottom: 0; }
-  .irow:first-child { padding-top: 0; }
-  .irow label {
-    font-size: 13px;
-    color: var(--ink2);
-    flex: 1;
-    line-height: 1.3;
-  }
-  .irow input {
-    width: 110px;
-    padding: 6px 10px;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    background: var(--surface);
-    color: var(--ink);
-    font-family: var(--mono);
-    font-size: 13px;
-    font-weight: 500;
-    text-align: right;
-    outline: none;
-    transition: border-color 0.15s;
-  }
-  .irow input:focus { border-color: var(--accent); background: #fff; }
-  .irow .unit { font-size: 12px; color: var(--ink3); min-width: 22px; text-align: left; }
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(24px);background:var(--navy);color:#fff;padding:10px 20px;border-radius:99px;font-size:12.5px;opacity:0;pointer-events:none;transition:opacity .3s, transform .3s;z-index:50;box-shadow:0 8px 22px rgba(0,0,0,.15)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-  /* PL table */
-  .pl-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 0;
-    font-size: 13px;
-    border-bottom: 1px solid var(--border);
-    gap: 8px;
-  }
-  .pl-row:last-child { border-bottom: none; }
-  .pl-row.total { font-weight: 700; font-size: 14px; }
-  .pl-row.indent { padding-left: 16px; color: var(--ink2); font-size: 12px; }
-  .pl-row.bigline { font-size: 15px; padding: 10px 0; }
-  .pl-right { display: flex; align-items: baseline; gap: 8px; font-family: var(--mono); white-space: nowrap; }
-  .pl-pct { font-size: 11px; color: var(--ink3); min-width: 42px; text-align: right; }
-
-  /* Bar */
-  .bar-wrap { margin-bottom: 14px; }
-  .bar-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 5px; }
-  .bar-name { font-size: 13px; color: var(--ink2); }
-  .bar-val { font-size: 12px; font-family: var(--mono); font-weight: 500; color: var(--ink); }
-  .bar-track { height: 8px; background: var(--surface); border-radius: 4px; overflow: hidden; border: 1px solid var(--border); }
-  .bar-fill { height: 100%; border-radius: 4px; transition: width 0.4s cubic-bezier(.4,0,.2,1); }
-  .bar-target { display: flex; align-items: center; gap: 6px; margin-top: 5px; }
-  .bar-hint { font-size: 11px; color: var(--ink3); }
-
-  /* Badge */
-  .badge {
-    display: inline-flex;
-    align-items: center;
-    padding: 2px 9px;
-    border-radius: 20px;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-  }
-  .badge.ok { background: var(--green-bg); color: var(--green); }
-  .badge.warn { background: var(--amber-bg); color: var(--amber); }
-  .badge.bad { background: var(--red-bg); color: var(--red); }
-
-  /* Mini grid for 2 columns */
-  .g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
-
-  /* Divider */
-  .div { border: none; border-top: 1px dashed var(--border); margin: 2px 0; }
-
-  /* Result highlight */
-  .result-box {
-    border-radius: 8px;
-    padding: 12px 16px;
-    margin-top: 14px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .result-box.ok { background: var(--green-bg); }
-  .result-box.warn { background: var(--amber-bg); }
-  .result-box.bad { background: var(--red-bg); }
-  .result-label { font-size: 13px; font-weight: 500; }
-  .result-val { font-size: 22px; font-weight: 700; font-family: var(--mono); }
-  .result-box.ok .result-label, .result-box.ok .result-val { color: var(--green); }
-  .result-box.warn .result-label, .result-box.warn .result-val { color: var(--amber); }
-  .result-box.bad .result-label, .result-box.bad .result-val { color: var(--red); }
-
-  /* Tag strip */
-  .event-tag {
-    display: inline-block;
-    background: var(--accent-bg);
-    color: var(--accent);
-    font-size: 11px;
-    font-weight: 700;
-    padding: 2px 9px;
-    border-radius: 4px;
-    margin-bottom: 10px;
-    letter-spacing: 0.05em;
-  }
-
-  /* Scroll area hint */
-  .scroll-hint { font-size: 11px; color: var(--ink3); text-align: center; padding: 6px 0 0; }
-
-  /* 2-col card grid for input */
-  .col2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  @media (max-width: 480px) { .col2 { grid-template-columns: 1fr; } }
-
-  .card-title {
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--ink3);
-    margin-bottom: 12px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .card-title::before {
-    content: '';
-    display: inline-block;
-    width: 3px;
-    height: 12px;
-    border-radius: 2px;
-    background: var(--ink);
-  }
-  .card-title.web::before { background: var(--accent); }
-  .card-title.goods::before { background: var(--green); }
-  .card-title.common::before { background: var(--ink3); }
+@media(max-width:800px){
+  .grid,.grid.cols-4,.two,.big-goal-summary{grid-template-columns:1fr}
+  .months{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:520px){
+  header{padding:40px 18px 30px}
+  h1{font-size:20px}
+  main{padding:26px 12px 55px}
+  .months{grid-template-columns:1fr}
+  th,td{padding:10px 9px;font-size:12px}
+  .ring-wrap{flex-direction:column;align-items:flex-start}
+}
 </style>
-
-<div class="app">
-  <div class="header">
-    <div class="header-title">原価管理マスタ</div>
-    <div class="header-sub">WEBデザイン（フリーランス）＋ 猫グッズ販売（マルシェ）</div>
-  </div>
-
-  <div class="tabs">
-    <button class="tab active" onclick="showTab('input')">⚙ 入力設定</button>
-    <button class="tab" onclick="showTab('pl')">📊 損益計算書</button>
-    <button class="tab" onclick="showTab('web')">💻 WEB案件</button>
-    <button class="tab" onclick="showTab('goods')">🐱 猫グッズ</button>
-  </div>
-
-  <!-- 入力 -->
-  <div id="tab-input" class="panel active">
-    <div class="slabel">共通設定（月次）</div>
-    <div class="card">
-      <div class="card-title common">自分の労働コスト</div>
-      <div class="irow"><label>時給（想定）</label><input type="number" id="jikyu" value="2500" oninput="calc()"><span class="unit">円/h</span></div>
-      <div class="irow"><label>月間稼働時間</label><input type="number" id="hours" value="160" oninput="calc()"><span class="unit">h</span></div>
-      <div class="irow"><label>厚生・福利費（月）</label><input type="number" id="fukuri" value="15000" oninput="calc()"><span class="unit">円</span></div>
-    </div>
-
-    <div class="slabel">事業別入力</div>
-    <div class="col2">
-      <div class="card">
-        <div class="card-title web">WEBデザイン</div>
-        <div class="irow"><label>月間売上</label><input type="number" id="web-uriage" value="300000" oninput="calc()"><span class="unit">円</span></div>
-        <div class="irow"><label>時間の割合</label><input type="number" id="web-pct" value="60" oninput="calc()"><span class="unit">%</span></div>
-        <div class="irow"><label>ツール費</label><input type="number" id="web-tool" value="5000" oninput="calc()"><span class="unit">円</span></div>
-        <div class="irow"><label>広告宣伝費</label><input type="number" id="web-ad" value="10000" oninput="calc()"><span class="unit">円</span></div>
-        <div class="irow"><label>雑費</label><input type="number" id="web-misc" value="5000" oninput="calc()"><span class="unit">円</span></div>
-      </div>
-      <div class="card">
-        <div class="card-title goods">猫グッズ（マルシェ）</div>
-        <div class="irow"><label>月間売上</label><input type="number" id="goods-uriage" value="100000" oninput="calc()"><span class="unit">円</span></div>
-        <div class="irow"><label>時間の割合</label><input type="number" id="goods-pct" value="40" oninput="calc()"><span class="unit">%</span></div>
-        <div class="irow"><label>材料費</label><input type="number" id="goods-zairyo" value="20000" oninput="calc()"><span class="unit">円</span></div>
-        <div class="irow"><label>販売手数料</label><input type="number" id="goods-fee" value="11" oninput="calc()"><span class="unit">%</span></div>
-        <div class="irow"><label>配送料</label><input type="number" id="goods-haisou" value="5000" oninput="calc()"><span class="unit">円</span></div>
-        <div class="irow"><label>広告費</label><input type="number" id="goods-ad" value="5000" oninput="calc()"><span class="unit">円</span></div>
-        <div class="irow"><label>修繕費・雑費</label><input type="number" id="goods-misc" value="3000" oninput="calc()"><span class="unit">円</span></div>
-        <div class="irow"><label>減価償却（月割）</label><input type="number" id="goods-dep" value="2000" oninput="calc()"><span class="unit">円</span></div>
-      </div>
-    </div>
-    <div class="scroll-hint">↑ 数値を変えると損益計算書・各原価タブに即時反映されます</div>
-  </div>
-
-  <!-- 損益 -->
-  <div id="tab-pl" class="panel">
-    <div class="slabel">月次サマリー</div>
-    <div class="mgrid" id="summary-cards"></div>
-
-    <div class="slabel">原価率チェック</div>
-    <div class="card" id="cost-check"></div>
-
-    <div class="slabel">月次損益計算書</div>
-    <div class="card" id="pl-table"></div>
-  </div>
-
-  <!-- WEB案件 -->
-  <div id="tab-web" class="panel">
-    <div class="slabel">1案件あたり原価計算</div>
-    <div class="card">
-      <div class="card-title web">案件情報</div>
-      <div class="irow"><label>見積もり金額</label><input type="number" id="proj-price" value="150000" oninput="calcProj()"><span class="unit">円</span></div>
-      <div class="irow"><label>作業時間（予定）</label><input type="number" id="proj-hours" value="40" oninput="calcProj()"><span class="unit">h</span></div>
-      <div class="irow"><label>外注費</label><input type="number" id="proj-outsource" value="0" oninput="calcProj()"><span class="unit">円</span></div>
-    </div>
-    <div id="proj-result"></div>
-  </div>
-
-  <!-- 猫グッズ -->
-  <div id="tab-goods" class="panel">
-    <div class="slabel">1商品あたり原価計算</div>
-    <div class="card">
-      <div class="card-title goods">商品情報</div>
-      <div class="irow"><label>販売価格</label><input type="number" id="item-price" value="1500" oninput="calcItem()"><span class="unit">円</span></div>
-      <div class="irow"><label>材料費（1個）</label><input type="number" id="item-zairyo" value="300" oninput="calcItem()"><span class="unit">円</span></div>
-      <div class="irow"><label>制作時間（1個）</label><input type="number" id="item-hours" value="0.5" step="0.1" oninput="calcItem()"><span class="unit">h</span></div>
-      <div class="irow"><label>マルシェ手数料率</label><input type="number" id="item-fee" value="11" oninput="calcItem()"><span class="unit">%</span></div>
-      <div class="irow"><label>配送費（1個）</label><input type="number" id="item-haisou" value="500" oninput="calcItem()"><span class="unit">円</span></div>
-    </div>
-    <div id="item-result"></div>
+</head>
+<body>
+<header>
+<div class="wrap">
+  <div class="eyebrow">LONG-TERM PLAN</div>
+  <h1 class="serif">猫と暮らし、保護猫を救える環境づくり</h1>
+  <div class="sub">現在の5匹を最優先に守り、経済力・住環境・譲渡基盤を整え、救える猫を少しずつ増やす。</div>
+  <div class="headrow">
+    <span class="badge" id="todayBadge">読み込み中…</span>
+    <span class="badge ghost" id="lastSaved">未保存</span>
   </div>
 </div>
+</header>
+
+<nav><div class="navin" id="navin">
+<span class="nav-pill" id="navPill"></span>
+<button class="active" data-page="dashboard">ダッシュボード</button>
+<button data-page="year">年間計画</button>
+<button data-page="month">月間チェック</button>
+<button data-page="money">資金管理</button>
+<button data-page="review">月末レビュー</button>
+<button data-page="history">振り返り</button>
+<button data-page="settings">設定・バックアップ</button>
+</div></nav>
+
+<main class="wrap">
+
+<section id="dashboard" class="page active">
+  <div class="grid">
+    <div class="card hoverable stagger" style="animation-delay:.04s">
+      <div class="muted">猫基金の長期目安</div>
+      <div class="ring-wrap">
+        <div class="ring">
+          <svg viewBox="0 0 120 120" width="104" height="104">
+            <circle class="track" cx="60" cy="60" r="48"></circle>
+            <circle class="fill" id="ringFill" cx="60" cy="60" r="48"></circle>
+          </svg>
+          <div class="pct" id="ringPct">0%</div>
+        </div>
+        <div>
+          <div class="metric" id="moneyMetric" style="margin:0">0円</div>
+          <div class="muted" id="moneyText">/ 0円</div>
+        </div>
+      </div>
+    </div>
+    <div class="card hoverable stagger" style="animation-delay:.08s"><div class="muted">現在の猫</div><div class="metric">5匹</div><div class="muted">この5匹を最優先に、生涯安心して暮らせる基盤を作る。</div></div>
+    <div class="card hoverable stagger" style="animation-delay:.12s"><div class="muted">デザイン売上目標</div><div class="metric">100万円/月</div><div class="muted" id="dashMonthlyFundText">猫基金：20万円/月を確保</div></div>
+  </div>
+
+  <div class="card hoverable stagger" style="margin-top:14px;animation-delay:.16s">
+    <h2>基本方針</h2>
+    <div class="note">「自分が飼える猫を増やす」のではなく、「猫を救い、譲渡し、また次の猫を救える仕組みを作る」。</div>
+  </div>
+
+  <div class="card hoverable stagger" style="margin-top:14px;animation-delay:.20s">
+    <h2>大きな目標</h2>
+    <p class="muted" style="margin-top:-8px">長期的な到達目標。達成したら✓を入れてください。</p>
+    <div id="bigGoals" class="big-goal-summary"></div>
+  </div>
+
+  <div class="card today hoverable stagger" style="margin-top:14px;animation-delay:.24s">
+    <h2>今月の重点 <span class="pill" id="dashMonthLabel"></span></h2>
+    <div class="muted" id="dashMonthSub" style="margin-bottom:10px"></div>
+    <div id="dashGoals"></div>
+    <div class="two" style="margin-top:12px">
+      <div><label class="field-label">今月の猫基金目標</label><div class="metric" style="font-size:17px" id="dashMonthlyTarget">—</div></div>
+      <div><label class="field-label">今月の実績貯蓄額</label><input id="dashMonthMoney" type="number" min="0" step="10000" placeholder="例：200000"></div>
+    </div>
+    <div class="actions" style="margin-top:12px">
+      <button class="secondary" data-goto="month">月間チェックを詳しく見る →</button>
+      <button class="secondary" data-goto="review">月末レビューを書く →</button>
+    </div>
+  </div>
+</section>
+
+<section id="year" class="page">
+<h2>年間計画</h2>
+<div class="card">
+<table><thead><tr><th>年度</th><th>猫基金目標（累計）</th><th>主なプラン</th><th>進捗</th><th>達成</th></tr></thead><tbody id="yearTable"></tbody></table>
+<p class="hint">累計目標は「月間チェック」で設定した各年度の月次目標（初期値：月20万円）から自動計算されます。年度ごとに目標を変えると、ここも自動で更新されます。</p>
+</div>
+</section>
+
+<section id="month" class="page">
+<h2>月間チェック</h2>
+<div class="card" style="margin-bottom:14px">
+  <div class="note" style="margin-bottom:14px"><strong>月間ルール：</strong>デザイン売上100万円を目標に、猫のための貯蓄を毎月20万円確保する。</div>
+  <div class="two">
+    <div><label class="field-label">表示する年</label><select id="yearSelect"></select></div>
+    <div><label class="field-label">この年度の月の猫基金目標</label><input id="annualTarget" type="number" min="0" step="10000" value="200000"></div>
+  </div>
+</div>
+<div class="months" id="monthGrid"></div>
+</section>
+
+<section id="money" class="page">
+<h2>資金管理</h2>
+<div class="grid">
+<div class="card"><div class="muted">現在の貯蓄・猫資金</div><input id="currentMoney" type="number" min="0" step="10000"><div class="muted" style="margin-top:6px">ダッシュボード・年間計画の進捗に反映されます。</div></div>
+<div class="card"><div class="muted" id="remainingLabel">目標まであと</div><div class="metric" id="remaining">0円</div></div>
+<div class="card"><div class="muted">現在の進捗</div><div class="metric" id="percent">0%</div></div>
+</div>
+
+<div class="card hoverable" style="margin-top:14px">
+<h2>月別実績との照合</h2>
+<div class="two">
+  <div><div class="muted">月間チェックで入力した実績の合計</div><div class="metric" id="monthlySum" style="font-size:19px">0円</div></div>
+  <div style="display:flex;align-items:flex-end"><button class="secondary" id="syncMoneyBtn">この合計を「現在の貯蓄」に反映する</button></div>
+</div>
+<p class="hint">「現在の貯蓄」は自分で更新する総額、「月別実績の合計」は月間チェックで毎月記録した金額の積み上げです。ズレていたら、必要な方に揃えてください。</p>
+</div>
+
+<div class="card" style="margin-top:14px">
+<h2>資金の仮配分</h2>
+<div class="note" style="margin-bottom:14px">月のデザイン売上目標：100万円 ／ 猫のための貯蓄目標：月20万円</div>
+<table><thead><tr><th>用途</th><th>目安</th><th>メモ</th></tr></thead>
+<tbody>
+<tr><td>現在の5匹の生涯医療・生活資金</td><td>500〜800万円</td><td>疾患のある猫は個別に見積もる</td></tr>
+<tr><td>猫と暮らす・保護する住環境</td><td>1,000〜1,500万円</td><td>増築・購入・賃貸等を比較</td></tr>
+<tr><td>保護・譲渡活動資金</td><td>300〜500万円</td><td>医療・フード・消耗品等</td></tr>
+<tr><td>自分自身の生活防衛資金</td><td>500万円〜</td><td>猫のためにも自分の生活を守る</td></tr>
+</tbody></table>
+<p class="hint">※金額は現時点の仮目標。実際の医療費・住居費・収入等に合わせて更新。</p>
+</div>
+</section>
+
+<section id="review" class="page">
+<h2>月末レビュー</h2>
+<div class="card">
+<label class="field-label">対象月</label><select id="reviewMonth"></select>
+<hr class="divider">
+<h3>今月できたこと</h3><textarea id="reviewDone" placeholder="できたこと、達成したこと"></textarea>
+<h3>できなかったこと・原因</h3><textarea id="reviewMiss" placeholder="できなかったこと、原因、改善点"></textarea>
+<h3>来月やること</h3><textarea id="reviewNext" placeholder="来月の具体的なアクション"></textarea>
+<h3>猫の状態・医療メモ</h3><textarea id="reviewCat" placeholder="体調、通院、薬、食事など"></textarea>
+</div>
+</section>
+
+<section id="history" class="page">
+<h2>振り返り</h2>
+<div class="grid">
+  <div class="card"><div class="muted">これまでの実績貯蓄（月別合計）</div><div class="metric" id="histMoney">0円</div></div>
+  <div class="card"><div class="muted">チェック達成数</div><div class="metric" id="histChecks">0</div></div>
+  <div class="card"><div class="muted">レビュー記録</div><div class="metric" id="histReviews">0ヶ月</div></div>
+</div>
+<div class="card" style="margin-top:14px">
+<h2>月ごとの記録</h2>
+<input class="searchbar" id="historySearch" type="text" placeholder="🔍 年月・メモで検索（例：2026、通院 など）">
+<table><thead><tr><th>年月</th><th>貯蓄実績</th><th>達成</th><th>メモ</th></tr></thead><tbody id="historyTable"></tbody></table>
+</div>
+<div class="card" style="margin-top:14px">
+<h2>年ごとの振り返り</h2>
+<div id="yearHistory"></div>
+</div>
+</section>
+
+<section id="settings" class="page">
+<h2>設定・バックアップ</h2>
+<div class="card">
+<h3>データについて</h3>
+<div class="note">このページのデータはお使いのブラウザ内（localStorage）にのみ保存されます。ブラウザのデータ消去・別端末・別ブラウザでは引き継がれません。<b>定期的にエクスポートして、ファイルとして保管することをおすすめします。</b></div>
+<div class="actions" style="margin-top:16px">
+  <button class="primary" id="exportBtn">⬇ バックアップをエクスポート（JSONファイル）</button>
+  <button class="secondary" id="importBtn">⬆ バックアップから復元</button>
+  <input type="file" id="importFile" accept="application/json" style="display:none">
+</div>
+<p class="hint" id="importResult"></p>
+</div>
+<div class="card" style="margin-top:14px">
+<h3>データを消去</h3>
+<p class="muted">すべてのチェック・入力・レビューが削除され、元に戻せません。バックアップを取ってから実行してください。</p>
+<button class="danger" id="resetBtn">すべてのデータをリセット</button>
+</div>
+</section>
+
+</main>
+<div class="toast" id="toast">保存しました</div>
 
 <script>
-function showTab(name) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  const tabs = ['input','pl','web','goods'];
-  document.querySelectorAll('.tab')[tabs.indexOf(name)].classList.add('active');
-  document.getElementById('tab-'+name).classList.add('active');
-  if(name==='pl') renderPL();
-  if(name==='web') calcProj();
-  if(name==='goods') calcItem();
+const KEY="cat_longterm_plan_v1";
+const data=JSON.parse(localStorage.getItem(KEY)||"{}");
+data.checks=data.checks||{};
+data.months=data.months||{};
+data.money=data.money||0;
+data.annualTargets=data.annualTargets||{}; // per-year MONTHLY cat-fund target (yen)
+data.reviews=data.reviews||{};
+
+const DEFAULT_MONTHLY=200000;
+const yearPlans=[
+["2026 / Year 1","資金形成開始／本業の収益力UP／5匹の年間医療・生活費を把握"],
+["2027 / Year 2","猫のための貯蓄を月20万円ペースで継続／5匹の医療予備費を厚くする"],
+["2028 / Year 3","生涯医療費を再計算／住環境の選択肢を比較／一時預かり等を学ぶ"],
+["2029 / Year 4","保護猫を受け入れられる環境を整える／譲渡までの流れを実践"],
+["2030 / Year 5","隔離・療養スペース等を整備／里親募集・譲渡の仕組みを構築"],
+["2031 / Year 6","目標到達／保護→ケア→譲渡→次の保護の循環を作る"]
+];
+const bigGoalLabels=["現在の5匹の生涯管理資金の調達","保護猫のために住環境を増築・整備","保護猫の受け入れ・譲渡基盤を形成"];
+const monthlyGoalLabels=["本業・売上","猫の医療・生活","資金形成","保護・譲渡準備"];
+
+function monthlyTarget(yi){ const v=data.annualTargets[yi]; return (v===undefined||v===null||v==="")?DEFAULT_MONTHLY:Number(v)||0; }
+function yearCumulativeTarget(yi){ let t=0; for(let j=0;j<=yi;j++) t+=monthlyTarget(j)*12; return t; }
+function totalGoal(){ return yearCumulativeTarget(5); }
+
+function todayInfo(){
+  const now=new Date();
+  let yi=now.getFullYear()-2026;
+  const inRange = yi>=0 && yi<=5;
+  if(yi<0) yi=0; if(yi>5) yi=5;
+  const m = inRange ? now.getMonth()+1 : 1;
+  return {yi,m,now,inRange};
 }
 
-function v(id){ return parseFloat(document.getElementById(id)?.value)||0; }
-function yen(n){ return '¥'+Math.round(n).toLocaleString(); }
-function pct(n,d){ return d===0?'—':(n/d*100).toFixed(1)+'%'; }
-function colorCls(val, target){ return val>=target?'ok': val>=target*0.9?'warn':'bad'; }
-
-function getData(){
-  const jikyu=v('jikyu'), hours=v('hours'), fukuri=v('fukuri');
-  const totalJinken = jikyu*hours + fukuri;
-  const webPctR=v('web-pct')/100, goodsPctR=v('goods-pct')/100;
-  const webU=v('web-uriage'), goodsU=v('goods-uriage');
-  const totalU=webU+goodsU;
-  const webJinken=totalJinken*webPctR, goodsJinken=totalJinken*goodsPctR;
-  const goodsZairyo=v('goods-zairyo');
-  const webTool=v('web-tool');
-  const webGenka=webJinken+webTool;
-  const goodsGenka=goodsJinken+goodsZairyo;
-  const totalGenka=webGenka+goodsGenka;
-  const webSo=webU-webGenka, goodsSo=goodsU-goodsGenka;
-  const totalSo=webSo+goodsSo;
-  const goodsFeeAmt=goodsU*v('goods-fee')/100;
-  const webHanpan=v('web-ad');
-  const goodsHanpan=goodsFeeAmt+v('goods-haisou')+v('goods-ad');
-  const webMisc=v('web-misc'), goodsMisc=v('goods-misc')+v('goods-dep');
-  const totalHanpan=webHanpan+goodsHanpan;
-  const totalMisc=webMisc+goodsMisc;
-  const eigyo=totalSo-totalHanpan-totalMisc;
-  return {totalU,totalJinken,goodsZairyo,webTool,totalGenka,webGenka,goodsGenka,
-    totalSo,webSo,goodsSo,goodsFeeAmt,webHanpan,goodsHanpan,
-    webMisc,goodsMisc,totalHanpan,totalMisc,eigyo,
-    webU,goodsU,webJinken,goodsJinken};
+function save(){
+  data.updatedAt=new Date().toISOString();
+  localStorage.setItem(KEY,JSON.stringify(data));
+  toast("保存しました");
+  updateLastSaved();
+  updateDash();
+  renderHistory();
+}
+function toast(msg){
+  const t=document.getElementById("toast");
+  t.textContent=msg; t.classList.add("show");
+  clearTimeout(toast._t);
+  toast._t=setTimeout(()=>t.classList.remove("show"),1600);
+}
+function updateLastSaved(){
+  const el=document.getElementById("lastSaved");
+  if(data.updatedAt){
+    const d=new Date(data.updatedAt);
+    el.textContent="最終保存："+d.toLocaleString("ja-JP",{month:"numeric",day:"numeric",hour:"2-digit",minute:"2-digit"});
+  } else { el.textContent="まだ保存されていません"; }
+}
+function yen(n){return new Intl.NumberFormat("ja-JP").format(Math.max(0,Math.round(n)))+"円";}
+function manEn(n){ // display like "1,440万円"
+  const man=Math.round(n/10000);
+  return new Intl.NumberFormat("ja-JP").format(man)+"万円";
 }
 
-function calc(){
-  const d=getData();
-  const soRitsu=d.totalU?d.totalSo/d.totalU*100:0;
-  const eigyoRitsu=d.totalU?d.eigyo/d.totalU*100:0;
-  const scEl=document.getElementById('summary-cards');
-  if(scEl) renderSummary(d,soRitsu,eigyoRitsu);
-  const plEl=document.getElementById('pl-table');
-  if(plEl) renderPL();
-  const ccEl=document.getElementById('cost-check');
-  if(ccEl) renderCostCheck(d);
+// ---- count-up animation for numeric text ----
+function animateNumber(el, to, formatter, duration){
+  duration = duration || 700;
+  const from = el._animFrom || 0;
+  const start = performance.now();
+  cancelAnimationFrame(el._raf);
+  function step(now){
+    const p = Math.min(1,(now-start)/duration);
+    const eased = 1-Math.pow(1-p,3);
+    const val = from + (to-from)*eased;
+    el.textContent = formatter(val);
+    if(p<1){ el._raf=requestAnimationFrame(step); } else { el._animFrom=to; }
+  }
+  el._raf=requestAnimationFrame(step);
 }
 
-function renderSummary(d,soRitsu,eigyoRitsu){
-  const sc=document.getElementById('summary-cards');
-  sc.innerHTML=`
-    <div class="mcard">
-      <div class="mcard-label">月間売上合計</div>
-      <div class="mcard-val">${yen(d.totalU)}</div>
-    </div>
-    <div class="mcard">
-      <div class="mcard-label">粗利益</div>
-      <div class="mcard-val ${colorCls(soRitsu,47)}">${yen(d.totalSo)}</div>
-      <div class="mcard-sub">粗利率 ${soRitsu.toFixed(1)}%</div>
-    </div>
-    <div class="mcard">
-      <div class="mcard-label">営業利益</div>
-      <div class="mcard-val ${d.eigyo>=0?'ok':'bad'}">${yen(d.eigyo)}</div>
-      <div class="mcard-sub">利益率 ${eigyoRitsu.toFixed(1)}%</div>
-    </div>
-    <div class="mcard">
-      <div class="mcard-label">人件費（自分）</div>
-      <div class="mcard-val">${yen(d.totalJinken)}</div>
-      <div class="mcard-sub">${pct(d.totalJinken,d.totalU)}</div>
-    </div>
-  `;
+const RING_CIRC = 2*Math.PI*48;
+function updateDash(){
+  const money=Number(data.money)||0;
+  const total=totalGoal();
+  const pct=total>0?Math.min(100,money/total*100):0;
+
+  const ringFill=document.getElementById("ringFill");
+  ringFill.style.strokeDasharray = RING_CIRC;
+  ringFill.style.strokeDashoffset = RING_CIRC*(1-pct/100);
+
+  animateNumber(document.getElementById("ringPct"), pct, v=>v.toFixed(0)+"%");
+  animateNumber(document.getElementById("moneyMetric"), money, v=>yen(v));
+  document.getElementById("moneyText").textContent = "/ "+manEn(total);
+
+  document.getElementById("remainingLabel").textContent = manEn(total)+"まであと";
+  document.getElementById("remaining").textContent = yen(Math.max(0,total-money));
+  document.getElementById("percent").textContent = pct.toFixed(1)+"%";
+
+  const t=todayInfo();
+  document.getElementById("dashMonthlyFundText").textContent = `猫基金：${yen(monthlyTarget(t.yi))}/月を確保`;
+
+  renderMonthlySum();
+  renderDashCurrentMonth();
 }
 
-function renderCostCheck(d){
-  const jinmat=d.totalJinken+d.goodsZairyo;
-  const jp=d.totalU?jinmat/d.totalU*100:0;
-  const sp=d.totalU?d.totalSo/d.totalU*100:0;
-  const jColor=jp<=53?'#2d7a4f':jp<=60?'#a05c00':'#c0392b';
-  const sColor=sp>=47?'#2d7a4f':'#a05c00';
-  const badgeCls=jp<=53?'ok':jp<=60?'warn':'bad';
-  const badgeText=jp<=53?'目標達成':'超過';
-  document.getElementById('cost-check').innerHTML=`
-    <div class="bar-wrap">
-      <div class="bar-head">
-        <span class="bar-name">人件費 ＋ 材料費　<span class="badge ${badgeCls}">${badgeText}</span></span>
-        <span class="bar-val">${jp.toFixed(1)}%（目標 ≦ 53%）</span>
-      </div>
-      <div class="bar-track"><div class="bar-fill" style="width:${Math.min(jp,100)}%;background:${jColor}"></div></div>
-    </div>
-    <div class="bar-wrap" style="margin-top:12px">
-      <div class="bar-head">
-        <span class="bar-name">粗利益率</span>
-        <span class="bar-val">${sp.toFixed(1)}%（目標 ≧ 47%）</span>
-      </div>
-      <div class="bar-track"><div class="bar-fill" style="width:${Math.min(sp,100)}%;background:${sColor}"></div></div>
-    </div>
-  `;
+// ---------- nav ----------
+function positionPill(btn){
+  const nav=document.getElementById("navin"), pill=document.getElementById("navPill");
+  const nr=nav.getBoundingClientRect(), br=btn.getBoundingClientRect();
+  pill.style.left=(br.left-nr.left+nav.scrollLeft)+"px";
+  pill.style.width=br.width+"px";
+}
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>gotoPage(b.dataset.page));
+document.querySelectorAll("[data-goto]").forEach(b=>b.onclick=()=>gotoPage(b.dataset.goto));
+function gotoPage(page){
+  const btn=[...document.querySelectorAll("nav button")].find(x=>x.dataset.page===page);
+  document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("active",x.dataset.page===page));
+  document.querySelectorAll(".page").forEach(p=>p.classList.toggle("active",p.id===page));
+  if(btn) positionPill(btn);
+  if(page==="month"){ const t=todayInfo(); document.getElementById("yearSelect").value=t.yi; renderMonths(); }
 }
 
-function renderPL(){
-  const d=getData();
-  const soRitsu=d.totalU?d.totalSo/d.totalU*100:0;
-  const eigyoRitsu=d.totalU?d.eigyo/d.totalU*100:0;
-  const soColor=soRitsu>=47?'var(--green)':'var(--amber)';
-  const eigyoColor=d.eigyo>=0?'var(--green)':'var(--red)';
-  renderSummary(d,soRitsu,eigyoRitsu);
-  renderCostCheck(d);
-  document.getElementById('pl-table').innerHTML=`
-    <div class="pl-row total bigline">
-      <span>売上高</span>
-      <div class="pl-right"><span>${yen(d.totalU)}</span><span class="pl-pct">100%</span></div>
-    </div>
-    <div class="pl-row indent"><span>WEBデザイン</span><span>${yen(d.webU)}</span></div>
-    <div class="pl-row indent"><span>猫グッズ</span><span>${yen(d.goodsU)}</span></div>
-    <hr class="div">
-    <div class="pl-row total">
-      <span>原価合計</span>
-      <div class="pl-right"><span>${yen(d.totalGenka)}</span><span class="pl-pct">${pct(d.totalGenka,d.totalU)}</span></div>
-    </div>
-    <div class="pl-row indent"><span>人件費（自分・厚生含）</span><span>${yen(d.totalJinken)}</span></div>
-    <div class="pl-row indent"><span>材料費</span><span>${yen(d.goodsZairyo)}</span></div>
-    <div class="pl-row indent"><span>ツール費</span><span>${yen(d.webTool)}</span></div>
-    <hr class="div">
-    <div class="pl-row total bigline" style="color:${soColor}">
-      <span>粗利益</span>
-      <div class="pl-right"><span>${yen(d.totalSo)}</span><span class="pl-pct" style="color:${soColor}">${soRitsu.toFixed(1)}%</span></div>
-    </div>
-    <hr class="div">
-    <div class="pl-row total">
-      <span>販売費・一般管理費</span>
-      <div class="pl-right"><span>${yen(d.totalHanpan+d.totalMisc)}</span><span class="pl-pct">${pct(d.totalHanpan+d.totalMisc,d.totalU)}</span></div>
-    </div>
-    <div class="pl-row indent"><span>販売手数料（マルシェ）</span><span>${yen(d.goodsFeeAmt)}</span></div>
-    <div class="pl-row indent"><span>広告宣伝費</span><span>${yen(d.webHanpan+v('goods-ad'))}</span></div>
-    <div class="pl-row indent"><span>配送料</span><span>${yen(v('goods-haisou'))}</span></div>
-    <div class="pl-row indent"><span>雑費・修繕費</span><span>${yen(d.webMisc+v('goods-misc'))}</span></div>
-    <div class="pl-row indent"><span>減価償却</span><span>${yen(v('goods-dep'))}</span></div>
-    <hr class="div">
-    <div class="pl-row total bigline" style="color:${eigyoColor}">
-      <span>営業利益</span>
-      <div class="pl-right"><span>${yen(d.eigyo)}</span><span class="pl-pct" style="color:${eigyoColor}">${eigyoRitsu.toFixed(1)}%</span></div>
-    </div>
-  `;
+// ---------- year table ----------
+function renderYears(){
+  const tb=document.getElementById("yearTable"); tb.innerHTML="";
+  const t=todayInfo();
+  const money=Number(data.money)||0;
+  yearPlans.forEach((y,i)=>{
+    const id="year"+i, done=!!data.checks[id];
+    const target=yearCumulativeTarget(i);
+    const pct=target>0?Math.min(100,money/target*100):0;
+    const isCurrent = t.inRange && i===t.yi;
+    tb.innerHTML+=`<tr class="${isCurrent?"current-row":""}"><td>${y[0]}${isCurrent?' <span class="pill">現在</span>':""}</td><td>${yen(target)}</td><td>${y[1]}</td><td><div class="progress" style="margin:4px 0"><div class="bar" style="width:${pct}%"></div></div><span class="muted">${pct.toFixed(0)}%</span></td><td><input class="check" type="checkbox" ${done?"checked":""} onchange="toggle('${id}',this.checked)"></td></tr>`;
+  });
+}
+function toggle(id,v){data.checks[id]=v;save();renderYears();renderBigGoals();renderMonths();}
+
+function renderBigGoals(){
+  const el=document.getElementById("bigGoals"); el.innerHTML="";
+  bigGoalLabels.forEach((g,i)=>{
+    const id="big_"+i, done=!!data.checks[id];
+    el.innerHTML+=`<div class="goal ${done?"done":""}"><input class="check" type="checkbox" ${done?"checked":""} onchange="toggle('${id}',this.checked)"><label>${g}</label></div>`;
+  });
 }
 
-function calcProj(){
-  const price=v('proj-price'), phours=v('proj-hours'), outsource=v('proj-outsource');
-  const jikyu=v('jikyu'), fukuri=v('fukuri'), totalHours=v('hours');
-  const hRate=jikyu+(totalHours>0?fukuri/totalHours:0);
-  const jinken=hRate*phours;
-  const genka=jinken+outsource;
-  const soUri=price-genka;
-  const hanpan=price*0.10;
-  const eigyo=price-genka-hanpan-v('web-misc');
-  const soR=price?soUri/price*100:0;
-  const eigyoR=price?eigyo/price*100:0;
-  const soBox=soR>=47?'ok':soR>=30?'warn':'bad';
-  const eigBox=eigyo>=0?'ok':'bad';
-  document.getElementById('proj-result').innerHTML=`
-    <div class="card" style="margin-bottom:12px">
-      <div class="card-title web">原価明細</div>
-      <div class="pl-row total"><span>見積もり金額</span><div class="pl-right"><span>${yen(price)}</span><span class="pl-pct">100%</span></div></div>
-      <div class="pl-row indent"><span>人件費（${phours}h × ¥${Math.round(hRate).toLocaleString()}）</span><span>${yen(jinken)}</span></div>
-      <div class="pl-row indent"><span>外注費</span><span>${yen(outsource)}</span></div>
-      <hr class="div">
-      <div class="pl-row total"><span>製造原価</span><div class="pl-right"><span>${yen(genka)}</span><span class="pl-pct">${pct(genka,price)}</span></div></div>
-    </div>
-    <div class="g2">
-      <div class="result-box ${soBox}">
-        <div>
-          <div class="result-label">案件粗利</div>
-          <div style="font-size:11px;opacity:0.8;margin-top:1px">${soR.toFixed(1)}%</div>
-        </div>
-        <div class="result-val">${yen(soUri)}</div>
-      </div>
-      <div class="result-box ${eigBox}">
-        <div>
-          <div class="result-label">営業利益（概算）</div>
-          <div style="font-size:11px;opacity:0.8;margin-top:1px">${eigyoR.toFixed(1)}%</div>
-        </div>
-        <div class="result-val">${yen(eigyo)}</div>
-      </div>
-    </div>
-    <div style="font-size:11px;color:var(--ink3);margin-top:8px">※ 実際の時給（厚生費込）= ¥${Math.round(hRate).toLocaleString()}/h</div>
-  `;
+// ---------- dashboard current-month block (bound to real month data) ----------
+function renderDashCurrentMonth(){
+  const t=todayInfo();
+  const key=`${t.yi}_${t.m}`;
+  const obj=data.months[key]||{};
+  document.getElementById("dashMonthLabel").textContent = t.inRange ? `${2026+t.yi}年${t.m}月` : "計画期間外";
+  document.getElementById("dashMonthSub").textContent = t.inRange
+    ? "実際のカレンダーに合わせて自動表示。ここでのチェックは「月間チェック」ページと連動します。"
+    : "現在の日付は計画期間（2026〜2031年）の外です。「月間チェック」ページから任意の年月を確認できます。";
+  const el=document.getElementById("dashGoals"); el.innerHTML="";
+  monthlyGoalLabels.forEach((label,i)=>{
+    const ck="c"+i, checked=!!obj[ck];
+    el.innerHTML+=`<div class="goal ${checked?"done":""}"><input class="check" type="checkbox" ${checked?"checked":""} onchange="monthToggle('${key}',this.checked,'${ck}')"><label>${label}</label></div>`;
+  });
+  document.getElementById("dashMonthlyTarget").textContent = yen(monthlyTarget(t.yi));
+  document.getElementById("dashMonthMoney").value = obj.money||"";
+  document.getElementById("dashMonthMoney").onchange = e=>monthMoney(key,e.target.value);
 }
 
-function calcItem(){
-  const price=v('item-price'), zairyo=v('item-zairyo'), ihours=v('item-hours');
-  const fee=v('item-fee'), haisou=v('item-haisou');
-  const jikyu=v('jikyu'), fukuri=v('fukuri'), totalHours=v('hours');
-  const hRate=jikyu+(totalHours>0?fukuri/totalHours:0);
-  const jinken=hRate*ihours;
-  const genka=jinken+zairyo;
-  const feeAmt=price*fee/100;
-  const soUri=price-genka;
-  const net=price-genka-feeAmt-haisou;
-  const soR=price?soUri/price*100:0;
-  const netR=price?net/price*100:0;
-  const bep=(1-fee/100)>0?(genka+haisou)/(1-fee/100):0;
-  const soBox=soR>=47?'ok':soR>=30?'warn':'bad';
-  const netBox=net>=0?'ok':'bad';
-  document.getElementById('item-result').innerHTML=`
-    <div class="card" style="margin-bottom:12px">
-      <div class="card-title goods">原価明細</div>
-      <div class="pl-row total"><span>販売価格</span><div class="pl-right"><span>${yen(price)}</span><span class="pl-pct">100%</span></div></div>
-      <div class="pl-row indent"><span>材料費</span><div class="pl-right"><span>${yen(zairyo)}</span><span class="pl-pct">${pct(zairyo,price)}</span></div></div>
-      <div class="pl-row indent"><span>人件費（${ihours}h × ¥${Math.round(hRate).toLocaleString()}）</span><div class="pl-right"><span>${yen(jinken)}</span><span class="pl-pct">${pct(jinken,price)}</span></div></div>
-      <hr class="div">
-      <div class="pl-row total"><span>製造原価</span><div class="pl-right"><span>${yen(genka)}</span><span class="pl-pct">${pct(genka,price)}</span></div></div>
-      <div class="pl-row indent"><span>マルシェ手数料（${fee}%）</span><span>▲ ${yen(feeAmt)}</span></div>
-      <div class="pl-row indent"><span>配送費</span><span>▲ ${yen(haisou)}</span></div>
-    </div>
-    <div class="g2">
-      <div class="result-box ${soBox}">
-        <div>
-          <div class="result-label">粗利</div>
-          <div style="font-size:11px;opacity:0.8;margin-top:1px">${soR.toFixed(1)}%</div>
-        </div>
-        <div class="result-val">${yen(soUri)}</div>
-      </div>
-      <div class="result-box ${netBox}">
-        <div>
-          <div class="result-label">手取り利益</div>
-          <div style="font-size:11px;opacity:0.8;margin-top:1px">${netR.toFixed(1)}%</div>
-        </div>
-        <div class="result-val">${yen(net)}</div>
-      </div>
-    </div>
-    <div class="g2" style="margin-top:10px">
-      <div class="mcard">
-        <div class="mcard-label">損益分岐 販売価格</div>
-        <div class="mcard-val" style="font-size:17px">${yen(bep)}</div>
-        <div class="mcard-sub">この値段以上なら黒字</div>
-      </div>
-      <div class="mcard">
-        <div class="mcard-label">この商品の実質時給</div>
-        <div class="mcard-val" style="font-size:17px">${ihours>0?yen(net/ihours)+'/h':'—'}</div>
-      </div>
-    </div>
-  `;
+function monthToggle(key,v,ck){
+  data.months[key]=data.months[key]||{};
+  data.months[key][ck]=v;
+  data.months[key].doneCount=["c0","c1","c2","c3"].filter(x=>data.months[key][x]).length;
+  save(); renderMonths(); renderDashCurrentMonth(); renderYears();
+}
+function monthMoney(key,v){
+  data.months[key]=data.months[key]||{};
+  data.months[key].money=Number(v)||0;
+  save(); renderYears();
 }
 
-calc(); calcProj(); calcItem();
+// ---------- month grid ----------
+function initYearSelect(){
+  const s=document.getElementById("yearSelect"); s.innerHTML="";
+  yearPlans.forEach((y,i)=>s.innerHTML+=`<option value="${i}">${y[0]}</option>`);
+  s.onchange=renderMonths;
+  s.value=todayInfo().yi;
+  document.getElementById("annualTarget").oninput=e=>{
+    data.annualTargets[s.value]=Number(e.target.value)||0; save(); renderMonths(); renderYears();
+  };
+}
+function renderMonths(){
+  const yi=Number(document.getElementById("yearSelect").value), grid=document.getElementById("monthGrid");
+  const t=todayInfo();
+  const monthly=monthlyTarget(yi);
+  document.getElementById("annualTarget").value=monthly;
+  grid.innerHTML="";
+  for(let m=1;m<=12;m++){
+    const key=`${yi}_${m}`, obj=data.months[key]||{};
+    const isCurrent = t.inRange && yi===t.yi && m===t.m;
+    const behind = obj.money!=null && obj.money!=="" && Number(obj.money) < monthly*0.6 && (obj.doneCount||0)<4;
+    grid.innerHTML+=`<div class="month-card ${isCurrent?"current":""}"><h3>${m}月 <span class="pill">${obj.doneCount||0}/4</span>${isCurrent?' <span class="pill navy">今月</span>':""}</h3>
+     <div class="muted">貯蓄目標：${yen(monthly)}</div>
+     <label class="small-check"><input class="check" type="checkbox" ${obj.c0?"checked":""} onchange="monthToggle('${key}',this.checked,'c0')">本業・売上</label>
+     <label class="small-check"><input class="check" type="checkbox" ${obj.c1?"checked":""} onchange="monthToggle('${key}',this.checked,'c1')">猫の医療・生活</label>
+     <label class="small-check"><input class="check" type="checkbox" ${obj.c2?"checked":""} onchange="monthToggle('${key}',this.checked,'c2')">資金形成</label>
+     <label class="small-check"><input class="check" type="checkbox" ${obj.c3?"checked":""} onchange="monthToggle('${key}',this.checked,'c3')">保護・譲渡準備</label>
+     <div style="margin-top:10px"><input type="number" min="0" step="10000" placeholder="実績貯蓄額" value="${obj.money||""}" onchange="monthMoney('${key}',this.value)"></div>
+     ${behind?'<div class="hint" style="color:var(--warn);margin-top:6px">⚠ 目標より遅れ気味</div>':""}
+    </div>`;
+  }
+}
+
+document.getElementById("currentMoney").value=data.money||"";
+document.getElementById("currentMoney").oninput=e=>{data.money=Number(e.target.value)||0;save();renderYears();};
+
+function sumMonthlyMoney(){
+  let total=0;
+  for(let yi=0;yi<6;yi++) for(let m=1;m<=12;m++){
+    const o=data.months[`${yi}_${m}`];
+    if(o&&o.money) total+=Number(o.money)||0;
+  }
+  return total;
+}
+function renderMonthlySum(){
+  const el=document.getElementById("monthlySum");
+  if(el) el.textContent=yen(sumMonthlyMoney());
+}
+document.getElementById("syncMoneyBtn").onclick=()=>{
+  const total=sumMonthlyMoney();
+  data.money=total; document.getElementById("currentMoney").value=total;
+  save(); renderYears();
+  toast("現在の貯蓄額に反映しました");
+};
+
+// ---------- history ----------
+function renderHistory(filter){
+  filter=(filter||document.getElementById("historySearch")?.value||"").trim().toLowerCase();
+  const rows=[], yearStats={};
+  let totalMoney=0, totalChecks=0;
+  for(let yi=0;yi<6;yi++){
+    yearStats[yi]={money:0,done:0,total:0};
+    for(let m=1;m<=12;m++){
+      const key=`${yi}_${m}`, o=data.months[key]||{};
+      const money=Number(o.money)||0, done=["c0","c1","c2","c3"].filter(x=>o[x]).length;
+      const review=data.reviews[`${2026+yi}-${m}`]||{};
+      const memo=(review.reviewDone||"").trim();
+      totalMoney+=money; totalChecks+=done;
+      yearStats[yi].money+=money; yearStats[yi].done+=done; yearStats[yi].total+=4;
+      if(money||done||memo||review.reviewNext||review.reviewMiss||review.reviewCat){
+        const label=`${2026+yi}年${m}月`;
+        const haystack=(label+" "+memo+" "+(review.reviewNext||"")+" "+(review.reviewMiss||"")+" "+(review.reviewCat||"")).toLowerCase();
+        if(!filter || haystack.includes(filter)){
+          rows.push(`<tr><td>${label}</td><td>${yen(money)}</td><td>${done}/4</td><td>${memo?memo.replace(/</g,"&lt;"):"—"}</td></tr>`);
+        }
+      }
+    }
+  }
+  document.getElementById("histMoney").textContent=yen(totalMoney);
+  document.getElementById("histChecks").textContent=totalChecks;
+  document.getElementById("histReviews").textContent=Object.keys(data.reviews).filter(k=>{
+    const o=data.reviews[k]; return Object.values(o).some(v=>String(v||"").trim());
+  }).length+"ヶ月";
+  document.getElementById("historyTable").innerHTML=rows.length?rows.join(""):`<tr><td colspan="4" class="empty">${filter?"該当する記録が見つかりません。":"まだ記録がありません。月間チェックや月末レビューを入力すると、ここに蓄積されます。"}</td></tr>`;
+  let yhtml="";
+  for(let yi=0;yi<6;yi++){
+    const s=yearStats[yi];
+    yhtml+=`<div class="card" style="margin:8px 0"><div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap"><strong>${2026+yi}年</strong><span>貯蓄実績 ${yen(s.money)}｜チェック ${s.done}/${s.total}</span></div><div class="progress"><div class="bar navy" style="width:${Math.min(100,s.total?s.done/s.total*100:0)}%"></div></div></div>`;
+  }
+  document.getElementById("yearHistory").innerHTML=yhtml;
+}
+document.getElementById("historySearch").oninput=e=>renderHistory(e.target.value);
+
+// ---------- review ----------
+function initReviews(){
+  const s=document.getElementById("reviewMonth");s.innerHTML="";
+  for(let y=2026;y<=2031;y++)for(let m=1;m<=12;m++)s.innerHTML+=`<option value="${y}-${m}">${y}年${m}月</option>`;
+  const t=todayInfo();
+  s.value=`${2026+t.yi}-${t.m}`;
+  s.onchange=loadReview; loadReview();
+  ["reviewDone","reviewMiss","reviewNext","reviewCat"].forEach(id=>{
+    document.getElementById(id).oninput=e=>{const k=s.value;data.reviews[k]=data.reviews[k]||{};data.reviews[k][id]=e.target.value;save();};
+  });
+}
+function loadReview(){const k=document.getElementById("reviewMonth").value,o=data.reviews[k]||{};["reviewDone","reviewMiss","reviewNext","reviewCat"].forEach(id=>document.getElementById(id).value=o[id]||"");}
+
+// ---------- settings: backup/restore/reset ----------
+document.getElementById("exportBtn").onclick=()=>{
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  const dstr=new Date().toISOString().slice(0,10);
+  a.href=url; a.download=`猫の中長期計画_バックアップ_${dstr}.json`;
+  document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
+  toast("エクスポートしました");
+};
+document.getElementById("importBtn").onclick=()=>document.getElementById("importFile").click();
+document.getElementById("importFile").onchange=e=>{
+  const file=e.target.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    try{
+      const incoming=JSON.parse(ev.target.result);
+      if(typeof incoming!=="object"||incoming===null) throw new Error("形式が不正です");
+      if(!confirm("現在のデータを、選択したファイルの内容で上書きします。よろしいですか？")) return;
+      Object.assign(data,{checks:{},months:{},money:0,annualTargets:{},reviews:{}},incoming);
+      localStorage.setItem(KEY,JSON.stringify(data));
+      document.getElementById("importResult").textContent="✔ 復元しました（"+file.name+"）";
+      renderAll();
+      toast("復元しました");
+    }catch(err){
+      document.getElementById("importResult").textContent="✖ 読み込みに失敗しました。正しいバックアップファイルか確認してください。";
+    }
+  };
+  reader.readAsText(file);
+  e.target.value="";
+};
+document.getElementById("resetBtn").onclick=()=>{
+  if(!confirm("本当にすべてのデータを削除しますか？この操作は元に戻せません。")) return;
+  if(!confirm("最終確認：バックアップは取りましたか？削除を実行します。")) return;
+  localStorage.removeItem(KEY);
+  location.reload();
+};
+
+// ---------- init ----------
+function renderAll(){
+  renderYears(); renderBigGoals(); initYearSelect(); renderMonths(); initReviews(); renderHistory(); updateDash(); updateLastSaved();
+}
+function renderTodayBadge(){
+  const t=todayInfo();
+  document.getElementById("todayBadge").textContent = t.inRange
+    ? `現在：${2026+t.yi}年${t.m}月（Year ${t.yi+1}）`
+    : `現在：${t.now.getFullYear()}年${t.now.getMonth()+1}月（計画期間外）`;
+}
+renderTodayBadge();
+renderAll();
+window.addEventListener("resize",()=>{
+  const active=document.querySelector("nav button.active");
+  if(active) positionPill(active);
+});
+requestAnimationFrame(()=>{
+  const active=document.querySelector("nav button.active");
+  if(active) positionPill(active);
+});
 </script>
+</body>
+</html>
